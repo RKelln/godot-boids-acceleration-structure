@@ -3,10 +3,11 @@ extends Node2D
 export var max_speed: = 200.0
 export var mouse_follow_force: = 0.05
 export var cohesion_force: = 0.05
-export var algin_force: = 0.05
+export var align_force: = 0.05
 export var separation_force: = 0.05
 export(float) var view_distance: = 50.0
 export(float) var avoid_distance: = 20.0
+export(float) var variance: = 0.1
 
 onready var screen_size = get_viewport_rect().size
 
@@ -22,7 +23,13 @@ func _ready():
     randomize()
     _velocity = Vector2(rand_range(-1, 1), rand_range(-1, 1)).normalized() * max_speed
     _mouse_target = get_random_target()
-
+    # randomize settings by variance
+    if variance > 0:
+        max_speed = max_speed * rand_range(1.0 - variance, 1.0 + variance)
+        mouse_follow_force = mouse_follow_force * rand_range(1.0 - variance, 1.0 + variance)
+        cohesion_force = cohesion_force * rand_range(1.0 - variance, 1.0 + variance)
+        align_force = align_force * rand_range(1.0 - variance, 1.0 + variance)
+        separation_force = separation_force * rand_range(1.0 - variance, 1.0 + variance)
 
 func _input(event):
     if event is InputEventMouseButton:
@@ -45,12 +52,12 @@ func _physics_process(delta):
     if _mouse_target != Vector2.INF:
         mouse_vector = global_position.direction_to(_mouse_target) * mouse_follow_force
 
-    # get cohesion, alginment, and separation vectors
+    # get cohesion, alignment, and separation vectors
     var vectors = get_flock_status(flock)
 
     # steer towards vectors
     var cohesion_vector = vectors[0] * cohesion_force
-    var align_vector = vectors[1] * algin_force
+    var align_vector = vectors[1] * align_force
     var separation_vector = vectors[2] * separation_force
     _flock_size = vectors[3]
 

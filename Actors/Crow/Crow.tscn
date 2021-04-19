@@ -10,11 +10,12 @@ __meta__ = {
 }
 max_speed = 200.0
 mouse_follow_force = 0.1
-cohesion_force = 0.6
-algin_force = 0.4
-separation_force = 0.6
-view_distance = 100.0
-avoid_distance = 25.0
+cohesion_force = 0.2
+align_force = 0.1
+separation_force = 0.2
+view_distance = 80.0
+avoid_distance = 40.0
+variance = 0.2
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 1.61354, 2.23908e-13 )

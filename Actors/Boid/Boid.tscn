@@ -10,7 +10,6 @@ script = ExtResource( 2 )
 max_speed = 200.0
 mouse_follow_force = 0.01
 cohesion_force = 0.2
-algin_force = 0.2
 separation_force = 0.4
 view_distance = 50.0
 avoid_distance = 25.0
