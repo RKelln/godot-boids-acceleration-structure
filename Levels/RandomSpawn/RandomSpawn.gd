@@ -24,3 +24,20 @@ func _ready():
         _accel_struct.add_body(boid, scaled)
         boid._accel_struct = _accel_struct
         add_child(boid)
+        boid.add_to_group('boids')
+
+
+func _input(event):
+
+    if event is InputEventMouseButton:
+        var target : Vector2
+        if event.get_button_index() == BUTTON_LEFT:
+            target = event.position
+        elif event.get_button_index() == BUTTON_RIGHT:
+            target = get_random_target()
+        get_tree().call_group("boids", "set_target", target)
+
+
+func get_random_target():
+    randomize()
+    return Vector2(rand_range(0, screen_rect.size.x), rand_range(0, screen_rect.size.y))

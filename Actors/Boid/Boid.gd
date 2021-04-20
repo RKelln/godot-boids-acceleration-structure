@@ -31,18 +31,18 @@ func _ready():
         align_force = align_force * rand_range(1.0 - variance, 1.0 + variance)
         separation_force = separation_force * rand_range(1.0 - variance, 1.0 + variance)
 
-func _input(event):
-    if event is InputEventMouseButton:
-        if event.get_button_index() == BUTTON_LEFT:
-            _mouse_target = event.position
-        elif event.get_button_index() == BUTTON_RIGHT:
-            _mouse_target = get_random_target()
+#func _input(event):
+#    if event is InputEventMouseButton:
+#        if event.get_button_index() == BUTTON_LEFT:
+#            _mouse_target = event.position
+#        elif event.get_button_index() == BUTTON_RIGHT:
+#            _mouse_target = get_random_target()
 
 
 func _process(delta):
     translate(_velocity * delta)
-    wrap_screen()
-
+    #wrap_screen()
+    bound_screen()
 
 func _physics_process(delta):
     var scaled_point = _accel_struct.scale_point(position)
@@ -105,9 +105,18 @@ func get_random_target():
     return Vector2(rand_range(0, screen_size.x), rand_range(0, screen_size.y))
 
 
+func set_target(target : Vector2):
+    _mouse_target = target
+
+
 func wrap_screen():
     position.x = wrapf(position.x, 0, screen_size.x)
     position.y = wrapf(position.y, 0, screen_size.y)
+
+
+func bound_screen():
+    position.x = clamp(position.x, 0, screen_size.x)
+    position.y = clamp(position.y, 0, screen_size.y)
 
 
 func velocity_set(velocity: Vector2):

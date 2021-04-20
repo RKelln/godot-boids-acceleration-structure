@@ -1,17 +1,16 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Actors/Crow/Crow.gd" type="Script" id=1]
-[ext_resource path="res://Actors/Crow/sprites/arrow3.png" type="Texture" id=2]
+[ext_resource path="res://Actors/Crow/sprites/bird_flap.png" type="Texture" id=2]
 
 [node name="Crow" type="Node2D"]
 script = ExtResource( 1 )
 __meta__ = {
 "_editor_description_": ""
 }
-max_speed = 200.0
-mouse_follow_force = 0.1
+mouse_follow_force = 0.25
 cohesion_force = 0.2
-align_force = 0.1
+align_force = 0.2
 separation_force = 0.2
 view_distance = 80.0
 avoid_distance = 40.0
@@ -22,3 +21,4 @@ position = Vector2( 1.61354, 2.23908e-13 )
 rotation = 1.5708
 scale = Vector2( 0.4, 0.4 )
 texture = ExtResource( 2 )
+hframes = 2

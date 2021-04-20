@@ -1,28 +1,25 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Actors/Crow/Crow.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Actors/MarkerFlag/MarkerFlag.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Levels/RandomSpawn/RandomSpawn.gd" type="Script" id=4]
 [ext_resource path="res://grey_field_background_no_birds.png" type="Texture" id=5]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 1039, 122 )
-
 [node name="RandomChickens" type="Node2D"]
 script = ExtResource( 4 )
-boids = 1000
+boids = 800
 Boid = ExtResource( 2 )
 
+[node name="Color" type="Polygon2D" parent="."]
+position = Vector2( -2789, -478 )
+color = Color( 0.647059, 0.647059, 0.662745, 1 )
+polygon = PoolVector2Array( 2745, 426, 2735, 1623, 4730, 1625, 4732, 424 )
+
 [node name="Background" type="Sprite" parent="."]
+visible = false
 position = Vector2( 960, 540 )
 scale = Vector2( 1.39842, 1.39743 )
 texture = ExtResource( 5 )
 
 [node name="Flag" parent="." instance=ExtResource( 3 )]
 position = Vector2( 514.017, 517.564 )
-
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2( 933, 1129 )
-shape = SubResource( 1 )
