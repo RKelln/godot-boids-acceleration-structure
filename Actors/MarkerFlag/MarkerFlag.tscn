@@ -1,12 +1,24 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Actors/MarkerFlag/sprites/Flag.png" type="Texture" id=1]
 [ext_resource path="res://Actors/MarkerFlag/MarkerFlag.gd" type="Script" id=2]
 
-[node name="MarkerFlag" type="Node2D"]
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 11.727, 15.9139 )
+
+[node name="MarkerFlag" type="Area2D"]
+monitoring = false
+monitorable = false
+collision_layer = 0
+collision_mask = 0
 script = ExtResource( 2 )
 
-[node name="Flag" type="Sprite" parent="."]
-position = Vector2( 0, -10.1646 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 3.1748, -14.6835 )
+shape = SubResource( 1 )
+
+[node name="Flag" type="Sprite" parent="CollisionShape2D"]
+position = Vector2( -3.1748, 4.12201 )
 scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 1 )
+[connection signal="input_event" from="." to="." method="_on_MarkerFlag_input_event"]
