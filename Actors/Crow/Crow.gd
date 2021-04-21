@@ -3,16 +3,21 @@ extends "res://Actors/Boid/Boid.gd"
 var _highlight = 0.0
 var min_highlight = 0.2
 var max_highlight = 0.5
-var flap = 0
+var flap : int = 0
+var flap_threshold : int
+var z_affinity : float = 1.0
 
+func _ready() -> void:
+    z_affinity = randf()
+    flap_threshold = max_speed * 2
 
-func _process(_delta):
+func _process(_delta: float) -> void:
     look_at(global_position + _velocity)
 
     var r = randf()
     # flap
-    flap += _velocity.length_squared() * r * _delta
-    if flap > max_speed * 5.0:
+    flap += momentum * r
+    if flap > flap_threshold:
         if $Sprite.frame == 0:
             $Sprite.frame = 1
         else:
@@ -30,8 +35,15 @@ func _process(_delta):
             _highlight -= 0.01
 
     _highlight = clamp(_highlight, min_highlight, max_highlight)
-    var inverse : float = 1.0 - _highlight
-    $Sprite.modulate = Color(0,0,0, inverse)
-    if _avoiding > 0:
-        $Sprite.modulate = Color(1,0,0)
+    var inverse : float = 1.0 - _highlight * z_affinity
+    if debug:
+        var avoiding = int(_avoiding > 0)
+        if momentum < min_speed:
+            $Sprite.modulate = Color(0, 1, avoiding)
+        else:
+            $Sprite.modulate = Color(1.0 - ((max_speed - momentum) / max_speed), 0, avoiding)
+    else:
+        $Sprite.modulate = Color(0,0,0, inverse)
+
+    # fake z depth by scaling
     scale = Vector2(inverse + min_highlight, inverse + min_highlight)

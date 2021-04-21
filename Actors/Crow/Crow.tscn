@@ -16,6 +16,7 @@ separation_force = 0.2
 view_distance = 60.0
 avoid_distance = 25.0
 variance = 0.2
+gravity = Vector2( 0, 98 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 1.61354, 2.23908e-13 )

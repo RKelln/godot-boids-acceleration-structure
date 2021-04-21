@@ -25,7 +25,7 @@ __meta__ = {
 "level",
 ]]
 script = ExtResource( 4 )
-boids = 600
+boids = 1
 Boid = ExtResource( 2 )
 Target = ExtResource( 3 )
 struct_scale = 20
@@ -36,7 +36,6 @@ color = Color( 0.647059, 0.647059, 0.662745, 1 )
 polygon = PoolVector2Array( 2745, 426, 2735, 1623, 4730, 1625, 4732, 424 )
 
 [node name="Background" type="Sprite" parent="BoidArea"]
-visible = false
 position = Vector2( 960, 540 )
 scale = Vector2( 1.39842, 1.39743 )
 texture = ExtResource( 5 )

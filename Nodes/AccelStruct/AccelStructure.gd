@@ -9,6 +9,9 @@ var y_min: int
 var y_max: int
 var global_bounds: Rect2
 
+var debug := false
+var _debug_cells: Array
+
 func _init(bounds: Rect2, scale: int):
     _scale = scale
     global_bounds = bounds
@@ -24,6 +27,13 @@ func _init(bounds: Rect2, scale: int):
         for y in _cells[x].size():
             _cells[x][y] = []
 
+func _debug() -> Array:
+    # convert to Rect2
+    var rects = []
+    for cell in _debug_cells:
+        rects.append(Rect2(cell.x * _scale, cell.y * _scale, _scale, _scale))
+    _debug_cells.clear()
+    return rects
 
 func _scale_axis(point: float) -> int:
     return int(floor(point / _scale))
@@ -51,7 +61,7 @@ func update_body(body: Node2D, scaled_point: Vector2, prev_point: Vector2) -> Ve
         return prev_point
 
 
-func get_bodies(scaled_point: Vector2, facing: Vector2, distance: float = 0):
+func get_bodies(scaled_point: Vector2, facing: Vector2, distance: float = 0, debug_single : bool = false):
     var x = scaled_point.x
     var y = scaled_point.y
 
@@ -60,45 +70,90 @@ func get_bodies(scaled_point: Vector2, facing: Vector2, distance: float = 0):
         d = _scale_axis(distance)
 
     var bodies = [_cells[x][y]]
-
-    # find all cells around boid up to distance
-    # TODO: onlylook ahead and to the side
-
-#    var least_x : int = max(0, x - d)# if facing.x <= 0 else x
-#    var most_x : int = min(x_max, x + d)# if facing.x >= 0 else x
-#
-#    var least_y : int = max(0, y - d) #if facing.y <= 0 else y
-#    var most_y : int = min(y_max, y + d) #if facing.y >= 0 else y
+    if debug and debug_single:
+        _debug_cells.append(Vector2(x,y))
 
     var signed := facing.sign()
     var horiz : bool = abs(facing.x) >= abs(facing.y)
-
     var jmin : int
     var jmax : int
 
     # add bodies from nearest to farthest
-    for i in range(1, d+1):
-        if horiz:
-            jmin = y_max - y
-            jmax = y_max - y
+    var w := d / 2
+    if horiz:
+        jmin = y_min - y
+        jmax = y_max - y
+        # add cells beside
+        for i in range(1, w+2):
+            # add cells in front
             if signed.x < 0 and x - i >= x_min:
-                for j in range(max(jmin, 1 - i), min(jmax, i)):
+                for j in range(max(jmin, 1 - i - w), min(jmax, i + w)):
                     bodies.append(_cells[x - i][y + j])
             if signed.x > 0 and x + i < x_max:
-                for j in range(max(jmin, 1 - i), min(jmax, i)):
+                for j in range(max(jmin, 1 - i - w), min(jmax, i + w)):
                     bodies.append(_cells[x + i][y + j])
-        else:
-            jmin = x_min - x
-            jmax = x_max - x
+            # add cells beside
+            if y - i >= y_min:
+                bodies.append(_cells[x][y - i])
+            if y + i < y_max:
+                bodies.append(_cells[x][y + i])
+            if bodies.size() > 30:
+                break
+    else: # vertical
+        jmin = x_min - x
+        jmax = x_max - x
+        for i in range(1, w+2):
+            # add cells in front
             if signed.y < 0 and y - i >= y_min:
-                for j in range(max(jmin, 1 - i), min(jmax, i)):
+                for j in range(max(jmin, 1 - i - w), min(jmax, i + w)):
                     bodies.append(_cells[x + j][y - i])
             if signed.y > 0 and y + i < y_max:
-                for j in range(max(jmin, 1 - i), min(jmax, i)):
+                for j in range(max(jmin, 1 - i - w), min(jmax, i + w)):
                     bodies.append(_cells[x + j][y + i])
-        if bodies.size() > 30:
-            break
+            # add cells beside
+            if x - i >= x_min:
+                bodies.append(_cells[x - i][y])
+            if x + i < x_max:
+                bodies.append(_cells[x + 1][y])
+            if bodies.size() > 30:
+                break
 
+    if debug and debug_single:
+        if horiz:
+            jmin = y_min - y
+            jmax = y_max - y
+            # add cells beside
+            for i in range(1, w+2):
+                # add cells in front
+                if signed.x < 0 and x - i >= x_min:
+                    for j in range(max(jmin, 1 - i - w), min(jmax, i + w)):
+                        _debug_cells.append(Vector2(x - i, y + j))
+                if signed.x > 0 and x + i < x_max:
+                    for j in range(max(jmin, 1 - i - w), min(jmax, i + w)):
+                        _debug_cells.append(Vector2(x + i, y + j))
+                # add cells beside
+                if y - i >= y_min:
+                    _debug_cells.append(Vector2(x, y - i))
+                if y + i < y_max:
+                    _debug_cells.append(Vector2(x, y + 1))
+        else: # vertical
+            jmin = x_min - x
+            jmax = x_max - x
+            for i in range(1, w+2):
+                # add cells in front
+                if signed.y < 0 and y - i >= y_min:
+                    for j in range(max(jmin, 1 - i - w), min(jmax, i + w)):
+                        _debug_cells.append(Vector2(x + j, y - i))
+                if signed.y > 0 and y + i < y_max:
+                    for j in range(max(jmin, 1 - i - w), min(jmax, i + w)):
+                        _debug_cells.append(Vector2(x + j, y + i))
+                # add cells beside
+                if x - i >= x_min:
+                    _debug_cells.append(Vector2(x - i, y))
+                if x + i < x_max:
+                    _debug_cells.append(Vector2(x + i, y))
+
+#    # all cells:
 #    for cell_x in range(least_x, most_x + 1):
 #        for cell_y in range(least_y, most_y + 1):
 #            if cell_x != x and cell_y != y:
