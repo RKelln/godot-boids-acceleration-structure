@@ -12,7 +12,7 @@ func _process(_delta):
     var r = randf()
     # flap
     flap += _velocity.length_squared() * r * _delta
-    if flap > 200.0:
+    if flap > max_speed * 5.0:
         if $Sprite.frame == 0:
             $Sprite.frame = 1
         else:

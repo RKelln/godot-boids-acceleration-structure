@@ -7,10 +7,11 @@ var x_min: int
 var x_max: int
 var y_min: int
 var y_max: int
+var global_bounds: Rect2
 
 func _init(bounds: Rect2, scale: int):
     _scale = scale
-
+    global_bounds = bounds
     x_min = _scale_axis(bounds.position.x)
     x_max = _scale_axis(bounds.end.x)
     y_min = _scale_axis(bounds.position.y)

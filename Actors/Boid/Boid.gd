@@ -1,5 +1,7 @@
 extends Node2D
 
+const AccelStruct = preload("res://Nodes/AccelStruct/AccelStructure.gd")
+
 export var max_speed: = 200.0
 export var target_force: = 0.05
 export var cohesion_force: = 0.05
@@ -16,10 +18,12 @@ var _prev_point = null
 var target_vector: Vector2
 var _velocity: Vector2 setget velocity_set, velocity_get
 
-var _accel_struct
+var _accel_struct : AccelStruct
 var _flock_size: int = 0
 var _avoiding : int = 0
 var _targets : Array
+var _bounds_cells : int = 5
+var bounds_force := 20.0
 
 func _ready():
     add_to_group("boids")
@@ -43,8 +47,9 @@ func _ready():
 
 func _process(delta):
     translate(_velocity * delta)
-    #wrap_screen()
     bound_screen()
+    #wrap_screen()
+
 
 func _physics_process(_delta):
     var scaled_point = _accel_struct.scale_point(position)
@@ -61,10 +66,6 @@ func _physics_process(_delta):
     _flock_size = vectors[3]
 
     # steer towards vectors
-#    var cohesion_vector = vectors[0] * cohesion_force
-#    var align_vector = vectors[1] * align_force
-#    var separation_vector = vectors[2] * separation_force
-
     var acceleration =  max_speed * (
         vectors[0] * cohesion_force
         + vectors[1] * align_force
@@ -74,6 +75,20 @@ func _physics_process(_delta):
         # don't make big changes to acceleration
         acceleration /= float(100 * _avoiding)
         #acceleration += (target_vector + _velocity) * 0.5
+
+    # avoid screen edgges
+    if scaled_point.x <= _accel_struct.x_min + _bounds_cells:
+        acceleration += bounds_force * Vector2(max_speed * max_speed / (0.1 + global_position.distance_squared_to(
+            Vector2(_accel_struct.global_bounds.position.x, position.y))), 0)
+    if scaled_point.y <= _accel_struct.y_min + _bounds_cells:
+        acceleration += bounds_force * Vector2(0, max_speed * max_speed / (0.1 + global_position.distance_squared_to(
+            Vector2(position.x, _accel_struct.global_bounds.position.y))))
+    if scaled_point.x >= _accel_struct.x_max - _bounds_cells:
+        acceleration += bounds_force * Vector2(- max_speed * max_speed / (0.1 + global_position.distance_squared_to(
+            Vector2(_accel_struct.global_bounds.end.x, position.y))), 0)
+    if scaled_point.y >= _accel_struct.y_max - _bounds_cells:
+        acceleration += bounds_force * Vector2(0, - max_speed * max_speed / (0.1 + global_position.distance_squared_to(
+            Vector2(position.x, _accel_struct.global_bounds.end.y))))
 
     _velocity = (_velocity + acceleration).clamped(max_speed)
     #_velocity +=  Vector2(0, 9.8) # gravity
@@ -103,7 +118,7 @@ func get_flock_status(flock: Array):
                     flock_center += f.position
 
                     if d > 0 and d < avoid_distance:
-                        avoid_vector -= (f.position - position).normalized() * (avoid_distance / (d + 0.1))
+                        avoid_vector -= (f.position - position).normalized() * (avoid_distance / (d + 0.01))
                         #avoid_vector -= f.position - position
                         avoiding += 1
 
@@ -115,10 +130,6 @@ func get_flock_status(flock: Array):
     if flock_size:
         align_vector /= flock_size
         flock_center /= flock_size
-
-        #var center_dir = position.direction_to(flock_center)
-        #var center_speed = ( / view_distance)
-        #center_vector = center_dir * center_speed
         center_vector = position.direction_to(flock_center) * position.distance_to(flock_center) / view_distance
 
     # if avoiding everything
@@ -183,6 +194,8 @@ func wrap_screen():
 func bound_screen():
     position.x = clamp(position.x, 0, screen_size.x)
     position.y = clamp(position.y, 0, screen_size.y)
+    if position.x == 0 or position.y == 0 or position.x == screen_size.x or position.y == screen_size.y:
+        _velocity = -_velocity
 
 
 func velocity_set(velocity: Vector2):
