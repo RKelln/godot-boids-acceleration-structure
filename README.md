@@ -21,6 +21,8 @@ Controls:
 * right click - place another flag
 * `D` : toggle debug info (red indicates speed, blue indicates emergency avoidance behaviour)
 * `B` : toggle background on / off
+* `A` : zoom in
+* `Z` : zoom out
 
 
 # Adjusting the simulation

@@ -8,17 +8,19 @@ export(PackedScene) var Target
 export(int) var struct_scale = 10
 
 var boid_rect: Rect2
-var gui : Control
 var debug : bool = false
 
 var _accel_struct: AccelStruct
+
+onready var gui := $"../GUIView/GUI"
+onready var camera := $"../ZoomingCamera2D"
 
 func _ready():
     var screen_rect := get_viewport_rect()
     boid_rect = Rect2(0, 0, screen_rect.size.x, screen_rect.size.y - 100) # don't include the bottom
     _accel_struct = AccelStruct.new(boid_rect, struct_scale)
     _accel_struct.debug = false
-    gui = $"../GUI"
+
 
 func set_count(value: int) -> void:
     var boid_nodes := get_tree().get_nodes_in_group("boids")
@@ -72,7 +74,7 @@ func _on_FlagArea_gui_input(event: InputEvent) -> void:
 
             var t = Target.instance()
             t.visible = true
-            t.position = event.global_position
+            t.position = get_global_mouse_position()
             $FlagArea.add_child(t)
             print("set target", t.position)
             get_tree().call_group("boids", "set_target", t.position)
@@ -80,7 +82,7 @@ func _on_FlagArea_gui_input(event: InputEvent) -> void:
         elif event.get_button_index() == BUTTON_RIGHT and event.pressed == false:
             var t = Target.instance()
             t.visible = true
-            t.position = event.global_position
+            t.position = get_global_mouse_position()
             $FlagArea.add_child(t)
             print("add target", t.position)
             get_tree().call_group("boids", "add_target", t.position)
