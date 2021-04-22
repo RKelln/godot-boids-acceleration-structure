@@ -171,6 +171,7 @@ func get_flock_status(flock: Array):
 
     if flock_size:
         align_vector /= flock_size
+        align_vector += Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0)) * max_speed * variance # imperfect alignment
         flock_center /= flock_size
         center_vector = position.direction_to(flock_center) * position.distance_to(flock_center) / view_distance
 
