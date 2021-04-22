@@ -1,5 +1,7 @@
 # Boids in Godot with Acceleration Structure
 
+![Screenshot of godot boids](https://raw.githubusercontent.com/RKelln/godot-boids-acceleration-structure/jackson/godot_boids_screenshot.png)
+
 This work is based off Stephen Young's [[kyrick/godot-boids-acceleration-structure]](https://github.com/kyrick/godot-boids-acceleration-structure).
 
 
