@@ -1,5 +1,7 @@
 extends Control
 
+onready var fps := $HBoxContainer/FPS
+
 func get_current_values() -> Dictionary:
     return {
         'cohesion' : $HBoxContainer/Cohesion.get_value(),
@@ -11,3 +13,6 @@ func get_current_values() -> Dictionary:
         'speed' :$HBoxContainer/Speed.get_value(),
         'count' : $HBoxContainer/Count.get_value()
     }
+
+func _process(_delta: float) -> void:
+    fps.text = str("FPS:",(Engine.get_frames_per_second()))

@@ -9,6 +9,8 @@ var y_min: int
 var y_max: int
 var global_bounds: Rect2
 
+var max_bodies_optimization : int = 16
+
 var debug := false
 var _debug_cells: Array
 
@@ -97,7 +99,7 @@ func get_bodies(scaled_point: Vector2, facing: Vector2, distance: float = 0, deb
                 bodies.append(_cells[x][y - i])
             if y + i < y_max:
                 bodies.append(_cells[x][y + i])
-            if bodies.size() > 30:
+            if bodies.size() > max_bodies_optimization:
                 break
     else: # vertical
         jmin = x_min - x
@@ -115,7 +117,7 @@ func get_bodies(scaled_point: Vector2, facing: Vector2, distance: float = 0, deb
                 bodies.append(_cells[x - i][y])
             if x + i < x_max:
                 bodies.append(_cells[x + 1][y])
-            if bodies.size() > 30:
+            if bodies.size() > max_bodies_optimization:
                 break
 
     if debug and debug_single:

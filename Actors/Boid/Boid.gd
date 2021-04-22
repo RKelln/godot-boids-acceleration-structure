@@ -27,7 +27,9 @@ var _flock_size: int = 0
 var _avoiding : int = 0
 var _targets : Array
 var _bounds_cells : int = 5
-var bounds_force := 2.0
+var bounds_force := 1.0
+var _group : int
+var _active_group : int = 0
 
 var debug : bool = false
 var debug_cells : bool = false
@@ -38,6 +40,7 @@ func _ready():
     _velocity = Vector2(rand_range(-1, 1), rand_range(-1, 1)).normalized() * max_speed
     target_vector = get_random_target()
     min_speed = max_speed / 10
+    _group = randi() % 4
     # randomize settings by variance
     if variance > 0:
         max_speed = max_speed * rand_range(1.0 - variance, 1.0 + variance)
@@ -71,31 +74,37 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
     var scaled_point = _accel_struct.scale_point(position)
-    var flock = _accel_struct.get_bodies(scaled_point, _velocity, view_distance, debug_cells)
-    if debug_cells:
-        _debug_cells = _accel_struct._debug()
+    var acceleration : Vector2
+    _active_group += 1
+    if _active_group > 3:
+        _active_group = 0
 
-    # targetting
-    var target_direction := Vector2.ZERO
-    if _targets.size() == 0 and momentum < min_speed:
-        target_vector = choose_target()
-    if target_vector != Vector2.INF and global_position.distance_to(target_vector) < avoid_distance * 2:
+    if _active_group == _group:
+        var flock = _accel_struct.get_bodies(scaled_point, _velocity, view_distance, debug_cells)
+        if debug_cells:
+            _debug_cells = _accel_struct._debug()
+
+        # targetting
+        var target_direction := Vector2.ZERO
+        if _targets.size() == 0 and momentum < min_speed:
             target_vector = choose_target()
-    target_direction = global_position.direction_to(target_vector)
+        if target_vector != Vector2.INF and global_position.distance_to(target_vector) < avoid_distance * 2:
+                target_vector = choose_target()
+        target_direction = global_position.direction_to(target_vector)
 
-    # get cohesion, alignment, and separation vectors
-    var vectors = get_flock_status(flock)
-    _flock_size = vectors[3]
+        # get cohesion, alignment, and separation vectors
+        var vectors = get_flock_status(flock)
+        _flock_size = vectors[3]
 
-    # steer towards vectors
-    var acceleration = (
-        vectors[0] * cohesion_force
-        + vectors[1] * align_force
-        + vectors[2] * separation_force
-        + target_direction * target_force)
-    if _avoiding > 0:
-        # don't make big changes to acceleration
-        acceleration /= float(10 * _avoiding)
+        # steer towards vectors
+        acceleration += 4 * (  # multiply by 2 because of group alternation
+            vectors[0] * cohesion_force
+            + vectors[1] * align_force
+            + vectors[2] * separation_force
+            + target_direction * target_force)
+        if _avoiding > 0:
+            # don't make big changes to acceleration
+            acceleration /= float(10 * _avoiding)
 
     # dart if too slow
     #if momentum < min_speed + variance:
@@ -222,9 +231,12 @@ func wrap_screen():
 
 
 func bound_screen():
-    position.x = clamp(position.x, 0, screen_size.x)
-    position.y = clamp(position.y, 0, screen_size.y)
-    if position.x == 0 or position.y == 0 or position.x == screen_size.x or position.y == screen_size.y:
+    position.x = clamp(position.x, _accel_struct.global_bounds.position.x, _accel_struct.global_bounds.end.x)
+    position.y = clamp(position.y, _accel_struct.global_bounds.position.y, _accel_struct.global_bounds.end.y)
+    if (position.x == _accel_struct.global_bounds.position.x or
+       position.y == _accel_struct.global_bounds.position.y or
+       position.x == _accel_struct.global_bounds.end.x or
+       position.y == _accel_struct.global_bounds.end.y):
         _velocity = -_velocity
 
 

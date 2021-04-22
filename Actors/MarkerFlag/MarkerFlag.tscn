@@ -21,4 +21,5 @@ shape = SubResource( 1 )
 position = Vector2( -3.1748, 4.12201 )
 scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 1 )
+
 [connection signal="input_event" from="." to="." method="_on_MarkerFlag_input_event"]

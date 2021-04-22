@@ -31,7 +31,6 @@ func set_count(value: int) -> void:
             var boid = Boid.instance()
             var init_pos: = Vector2(rand_range(boid_rect.position.x + 10, boid_rect.end.x - 10), rand_range(boid_rect.position.y + 10, boid_rect.end.y - 10))
             boid.position = init_pos
-            print(init_pos)
             var scaled = _accel_struct.scale_point(init_pos)
             boid._prev_point = scaled
             _accel_struct.add_body(boid, scaled)

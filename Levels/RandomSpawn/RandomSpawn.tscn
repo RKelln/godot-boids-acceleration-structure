@@ -46,4 +46,5 @@ texture = ExtResource( 5 )
 anchor_top = 1.0
 grow_vertical = 0
 rect_min_size = Vector2( 0, 60 )
+
 [connection signal="gui_input" from="FlagClicks" to="BoidArea" method="_on_FlagArea_gui_input"]
