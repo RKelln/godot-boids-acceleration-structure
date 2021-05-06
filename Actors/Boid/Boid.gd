@@ -28,8 +28,13 @@ var _avoiding : int = 0
 var _targets : Array
 var _bounds_cells : int = 5
 var bounds_force := 1.0
-var _group : int
-var _active_group : int = 0
+
+var paint_viewport : Viewport
+
+# optimizations:
+var MAX_PHYSICS_GROUPS := 4
+var _physics_group : int
+var _active_physics_group : int = 0
 
 var debug : bool = false
 var debug_cells : bool = false
@@ -40,7 +45,8 @@ func _ready():
     _velocity = Vector2(rand_range(-1, 1), rand_range(-1, 1)).normalized() * max_speed
     target_vector = get_random_target()
     min_speed = max_speed / 10
-    _group = randi() % 4
+    _physics_group = randi() % MAX_PHYSICS_GROUPS
+    _active_physics_group = randi() % MAX_PHYSICS_GROUPS
     # randomize settings by variance
     if variance > 0:
         max_speed = max_speed * rand_range(1.0 - variance, 1.0 + variance)
@@ -63,6 +69,7 @@ func _draw() -> void:
         draw_circle(local_pos, view_distance, Color(0, 0, 1.0, 0.2))
         draw_line(local_pos, to_local(target_vector), Color(0,0,0,target_force))
 
+
 func _process(delta: float) -> void:
     _velocity += gravity * delta # gravity
 #    _velocity *= 1.0 - (2.0 * delta) # friction
@@ -75,11 +82,11 @@ func _process(delta: float) -> void:
 func _physics_process(delta: float) -> void:
     var scaled_point = _accel_struct.scale_point(position)
     var acceleration : Vector2
-    _active_group += 1
-    if _active_group > 3:
-        _active_group = 0
+    _active_physics_group += 1
+    if _active_physics_group >= MAX_PHYSICS_GROUPS:
+        _active_physics_group = 0
 
-    if _active_group == _group:
+    if _active_physics_group == _physics_group:
         var flock = _accel_struct.get_bodies(scaled_point, _velocity, view_distance, debug_cells)
         if debug_cells:
             _debug_cells = _accel_struct._debug()
