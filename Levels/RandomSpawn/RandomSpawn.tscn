@@ -1,34 +1,72 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Nodes/GUI.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Actors/Crow/Crow.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Actors/MarkerFlag/MarkerFlag.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Levels/RandomSpawn/RandomSpawn.gd" type="Script" id=4]
+[ext_resource path="res://Levels/RandomSpawn/BoidArea.gd" type="Script" id=4]
 [ext_resource path="res://grey_field_background_no_birds.png" type="Texture" id=5]
 [ext_resource path="res://Levels/RandomSpawn/ZoomingCamera2D.gd" type="Script" id=6]
+[ext_resource path="res://OffscreenWorld.tres" type="World" id=7]
+[ext_resource path="res://PaintMaterial.tres" type="Material" id=8]
+[ext_resource path="res://Levels/RandomSpawn/BlankTexture.gd" type="Script" id=9]
+[ext_resource path="res://Levels/RandomSpawn/RandomSpawn.gd" type="Script" id=10]
+[ext_resource path="res://blur.shader" type="Shader" id=11]
 
-[node name="RandomSpawn" type="Node"]
+[sub_resource type="ViewportTexture" id=1]
+viewport_path = NodePath("PaintViewportContainer/PaintBlur")
 
-[node name="BoidArea" type="Node2D" parent="." groups=[
-"level",
-]]
-script = ExtResource( 4 )
-boids = 1
-Boid = ExtResource( 2 )
-Target = ExtResource( 3 )
-struct_scale = 20
+[sub_resource type="ShaderMaterial" id=4]
+shader = ExtResource( 11 )
+shader_param/radius = 2.0
 
-[node name="Color" type="Polygon2D" parent="BoidArea"]
-position = Vector2( -2789, -478 )
-color = Color( 0.647059, 0.647059, 0.662745, 1 )
-polygon = PoolVector2Array( 2745, 426, 2735, 1623, 4730, 1625, 4732, 424 )
+[sub_resource type="ViewportTexture" id=2]
+viewport_path = NodePath("BoidsViewPointContainer/BoidsViewPort")
 
-[node name="Background" type="Sprite" parent="BoidArea"]
+[sub_resource type="ViewportTexture" id=3]
+viewport_path = NodePath("PaintViewportContainer/Paint")
+
+[node name="RandomSpawn" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BlackBackground" type="ColorRect" parent="."]
+visible = false
+margin_right = 1920.0
+margin_bottom = 1080.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NeutralBackground" type="ColorRect" parent="."]
+margin_right = 1920.0
+margin_bottom = 1080.0
+color = Color( 0.603922, 0.603922, 0.603922, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Sprite" parent="."]
+visible = false
 position = Vector2( 960, 540 )
 scale = Vector2( 1.39842, 1.39743 )
 texture = ExtResource( 5 )
 
-[node name="FlagArea" type="Node2D" parent="BoidArea"]
+[node name="PaintTexture" type="TextureRect" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = SubResource( 1 )
+expand = true
+stretch_mode = 1
+flip_v = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ZoomingCamera2D" type="Camera2D" parent="."]
 position = Vector2( 960, 540 )
@@ -60,4 +98,96 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="gui_input" from="GUIView/FlagClicks" to="BoidArea" method="_on_FlagArea_gui_input"]
+[node name="BoidsViewPointContainer" type="ViewportContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BoidsViewPort" type="Viewport" parent="BoidsViewPointContainer"]
+size = Vector2( 1920, 1080 )
+transparent_bg = true
+handle_input_locally = false
+hdr = false
+disable_3d = true
+usage = 0
+render_target_update_mode = 3
+
+[node name="BoidArea" type="Node2D" parent="BoidsViewPointContainer/BoidsViewPort" groups=[
+"level",
+]]
+script = ExtResource( 4 )
+boids = 1
+Boid = ExtResource( 2 )
+Target = ExtResource( 3 )
+struct_scale = 20
+
+[node name="FlagArea" type="Node2D" parent="BoidsViewPointContainer/BoidsViewPort/BoidArea"]
+
+[node name="PaintViewportContainer" type="ViewportContainer" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_right = 2.0
+margin_bottom = 1080.0
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Paint" type="Viewport" parent="PaintViewportContainer"]
+size = Vector2( 1920, 1080 )
+own_world = true
+world = ExtResource( 7 )
+transparent_bg = true
+handle_input_locally = false
+hdr = false
+disable_3d = true
+usage = 0
+render_target_clear_mode = 1
+render_target_update_mode = 0
+gui_disable_input = true
+
+[node name="TextureRect" type="TextureRect" parent="PaintViewportContainer/Paint"]
+material = SubResource( 4 )
+margin_right = 1920.0
+margin_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource( 2 )
+expand = true
+script = ExtResource( 9 )
+
+[node name="BlackAlpha1" type="ColorRect" parent="PaintViewportContainer/Paint"]
+margin_right = 1920.0
+margin_bottom = 1080.0
+color = Color( 0, 0, 0, 0.0117647 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PaintBlur" type="Viewport" parent="PaintViewportContainer"]
+size = Vector2( 1920, 1080 )
+own_world = true
+world = ExtResource( 7 )
+transparent_bg = true
+handle_input_locally = false
+hdr = false
+disable_3d = true
+usage = 0
+render_target_clear_mode = 1
+render_target_update_mode = 0
+gui_disable_input = true
+
+[node name="TextureRect" type="TextureRect" parent="PaintViewportContainer/PaintBlur"]
+material = ExtResource( 8 )
+margin_right = 1920.0
+margin_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource( 3 )
+expand = true
+script = ExtResource( 9 )
+
+[connection signal="gui_input" from="GUIView/FlagClicks" to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_FlagArea_gui_input"]

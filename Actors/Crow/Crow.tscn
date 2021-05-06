@@ -1,7 +1,21 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Actors/Crow/Crow.gd" type="Script" id=1]
 [ext_resource path="res://Actors/Crow/sprites/bird_flap_white.png" type="Texture" id=2]
+
+[sub_resource type="Gradient" id=1]
+colors = PoolColorArray( 1, 1, 1, 0.443137, 0, 0, 0, 0 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 2.0
+color_ramp = SubResource( 2 )
 
 [node name="Crow" type="Node2D"]
 script = ExtResource( 1 )
@@ -24,3 +38,10 @@ rotation = 1.5708
 scale = Vector2( 0.4, 0.4 )
 texture = ExtResource( 2 )
 hframes = 2
+
+[node name="Trail" type="Particles2D" parent="Sprite"]
+amount = 40
+lifetime = 5.0
+speed_scale = 4.0
+local_coords = false
+process_material = SubResource( 3 )

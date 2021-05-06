@@ -6,10 +6,19 @@ var max_highlight = 0.5
 var flap : int = 0
 var flap_threshold : int
 var z_affinity : float = 1.0
+var color : Color
+var base_color: Color
+
+onready var trail : Particles2D = $Sprite/Trail
 
 func _ready() -> void:
     z_affinity = randf()
-    flap_threshold = max_speed * 2
+    flap_threshold = max_speed * 4
+    trail.emitting = false
+    trail.visible = false
+    color = Color(0,0,0)
+    base_color = Color(randf(), randf(), randf())
+
 
 func _process(_delta: float) -> void:
     look_at(global_position + _velocity)
@@ -39,11 +48,21 @@ func _process(_delta: float) -> void:
     if debug:
         var avoiding = int(_avoiding > 0)
         if momentum < min_speed:
-            $Sprite.modulate = Color(0, 1, avoiding)
+            color = Color(0, 1, avoiding)
         else:
-            $Sprite.modulate = Color(1.0 - ((max_speed - momentum) / max_speed), 0, avoiding)
+            color = Color(1.0 - ((max_speed - momentum) / max_speed), 0, avoiding)
     else:
-        $Sprite.modulate = Color(0,0,0, inverse)
+        color = base_color
+        color.a = inverse
+
+    $Sprite.modulate = color
+    if trail.visible:
+        trail.modulate = base_color
 
     # fake z depth by scaling
     scale = Vector2(inverse + min_highlight, inverse + min_highlight)
+
+func toggle_trails() -> void:
+    trail.emitting = !trail.emitting
+    trail.restart()
+    trail.visible = !trail.visible
