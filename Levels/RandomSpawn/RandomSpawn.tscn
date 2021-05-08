@@ -14,10 +14,10 @@
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("PaintViewportContainer/PaintBlur")
 
-[sub_resource type="ViewportTexture" id=3]
+[sub_resource type="ViewportTexture" id=2]
 viewport_path = NodePath("BoidsViewPointContainer/BoidsViewPort")
 
-[sub_resource type="ShaderMaterial" id=6]
+[sub_resource type="ShaderMaterial" id=3]
 shader = ExtResource( 8 )
 shader_param/radius = 1.2
 
@@ -152,12 +152,12 @@ margin_right = 1920.0
 margin_bottom = 1080.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-texture = SubResource( 3 )
+texture = SubResource( 2 )
 expand = true
 script = ExtResource( 9 )
 
 [node name="BlackAlpha1" type="ColorRect" parent="PaintViewportContainer/Paint"]
-material = SubResource( 6 )
+material = SubResource( 3 )
 margin_right = 1920.0
 margin_bottom = 1080.0
 color = Color( 0, 0, 0, 0.0117647 )
@@ -188,7 +188,7 @@ expand = true
 script = ExtResource( 9 )
 
 [node name="BlackAlpha2" type="ColorRect" parent="PaintViewportContainer/PaintBlur"]
-material = SubResource( 6 )
+material = SubResource( 3 )
 margin_right = 1920.0
 margin_bottom = 1080.0
 color = Color( 0, 0, 0, 0.0117647 )

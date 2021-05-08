@@ -10,5 +10,7 @@ func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_released('background'):
         $Background.visible = not $Background.visible
     if event.is_action_released('toggle_boid_trails'):
+        get_tree().call_group('boids', 'toggle_trails')
+    if event.is_action_released('toggle_paint'):
         $PaintTexture.visible = not $PaintTexture.visible
         $PaintViewportContainer.visible = not $PaintViewportContainer.visible
