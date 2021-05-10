@@ -1,13 +1,13 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Actors/Crow/Crow.gd" type="Script" id=1]
+[ext_resource path="res://Actors/Crow/MusicalCrow.gd" type="Script" id=1]
 [ext_resource path="res://Actors/Crow/sprites/bird_flap_white.png" type="Texture" id=2]
 
-[sub_resource type="Curve" id=4]
+[sub_resource type="Curve" id=1]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.0988636 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=5]
-curve = SubResource( 4 )
+[sub_resource type="CurveTexture" id=2]
+curve = SubResource( 1 )
 
 [sub_resource type="ParticlesMaterial" id=3]
 emission_shape = 1
@@ -20,7 +20,7 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 3.0
 scale_random = 0.12
-scale_curve = SubResource( 5 )
+scale_curve = SubResource( 2 )
 color = Color( 1, 1, 1, 0.47451 )
 
 [node name="Crow" type="Node2D"]
@@ -28,15 +28,6 @@ script = ExtResource( 1 )
 __meta__ = {
 "_editor_description_": ""
 }
-max_speed = 100.0
-target_force = 0.3
-cohesion_force = 0.2
-align_force = 0.2
-separation_force = 0.2
-view_distance = 60.0
-avoid_distance = 25.0
-variance = 0.2
-gravity = Vector2( 0, 98 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 1.61354, 2.23908e-13 )

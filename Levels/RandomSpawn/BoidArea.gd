@@ -15,6 +15,8 @@ onready var gui := get_node("/root/RandomSpawn/GUIView/GUI")
 onready var camera := get_node("/root/RandomSpawn/ZoomingCamera2D")
 
 
+
+
 func _ready() -> void:
     var screen_rect := get_viewport_rect()
     boid_rect = Rect2(0, 0, screen_rect.size.x, screen_rect.size.y - 100) # don't include the bottom
@@ -38,6 +40,9 @@ func set_count(value: int) -> void:
             _accel_struct.add_body(boid, scaled)
             boid._accel_struct = _accel_struct
             boid.set_values(values)
+            # add to notes
+            var note = Music.notes[randi()%7]
+            boid.set_values(note)
             add_child(boid)
 
     if current_boid_count > value:

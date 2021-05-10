@@ -24,6 +24,10 @@ config/name="godot-boids-acceleration-structure"
 run/main_scene="res://Levels/RandomSpawn/RandomSpawn.tscn"
 config/icon="res://Chick_Avatar.png"
 
+[autoload]
+
+Music="*res://Music.gd"
+
 [display]
 
 window/size/width=1920

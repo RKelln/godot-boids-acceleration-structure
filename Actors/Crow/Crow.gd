@@ -16,9 +16,9 @@ func _ready() -> void:
     flap_threshold = max_speed * 4
     trail.emitting = false
     trail.visible = false
-    color = Color(0,0,0)
-    base_color = Color(randf(), randf(), randf())
-
+    base_color = Color(0,0,0)
+    color = base_color
+    $Sprite.modulate = color
 
 func _process(_delta: float) -> void:
     look_at(global_position + _velocity)
@@ -52,12 +52,12 @@ func _process(_delta: float) -> void:
         else:
             color = Color(1.0 - ((max_speed - momentum) / max_speed), 0, avoiding)
     else:
-        color = base_color
+        #color = base_color
         color.a = inverse
 
     $Sprite.modulate = color
-    if trail.visible:
-        trail.modulate = base_color
+    #if trail.visible:
+    #    trail.modulate = Color(color.r, color.g, color.b)
 
     # fake z depth by scaling
     scale = Vector2(inverse + min_highlight, inverse + min_highlight)

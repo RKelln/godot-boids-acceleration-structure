@@ -245,7 +245,7 @@ margin_bottom = 62.0
 rect_scale = Vector2( 1, 1 )
 parameter = "count"
 group = "level"
-initial_value = 200.0
+initial_value = 250.0
 value_scalar = 1.0
 
 [node name="VBoxContainer" parent="HBoxContainer/Count" index="0"]
