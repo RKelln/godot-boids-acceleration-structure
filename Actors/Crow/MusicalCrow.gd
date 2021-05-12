@@ -43,13 +43,13 @@ func _process(delta: float) -> void:
             trail.visible = false
 
 func set_note(note : int, color : Color) -> void:
-    if self.note > 0 and is_in_group("notes_" + String(self.note)):
-        remove_from_group("notes_" + String(self.note))
+    if self.note > 0 and is_in_group("note_" + String(self.note)):
+        remove_from_group("note_" + String(self.note))
 
     if note > 0:
         self.note = note
         self.note_color = color
-        add_to_group("notes_" + String(note))
+        add_to_group("note_" + String(note))
 
 func play_note() -> void:
     target_color = note_color
