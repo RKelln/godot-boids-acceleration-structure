@@ -1,5 +1,7 @@
 extends Node
 
+const SMF = preload( "../addons/midi/SMF.gd" )
+
 # https://colorswall.com/palette/102/
 var notes = [
     { 'note' : 1, 'note_color': Color("ff0000")}, # red
@@ -70,6 +72,15 @@ func note(note_index : int, message : String) -> void:
         get_tree().call_group(n.group, message)
         n.on = true
 
+
+func midi_index_to_note_index(midi_index : int) -> int :
+    return midi_index % 7
+
+func midi_note(event) -> void:
+    if event is SMF.MIDIEventNoteOn:
+        note(midi_index_to_note_index(event.note), "note_on")
+    elif event is SMF.MIDIEventNoteOff:
+        note(midi_index_to_note_index(event.note), "note_off")
 
 func rand_note() -> int:
     return randi() % notes.size()

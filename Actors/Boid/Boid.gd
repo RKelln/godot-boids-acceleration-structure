@@ -81,7 +81,7 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
     var scaled_point = _accel_struct.scale_point(position)
-    var acceleration : Vector2
+    var acceleration := Vector2.ZERO
     _active_physics_group += 1
     if _active_physics_group >= MAX_PHYSICS_GROUPS:
         _active_physics_group = 0

@@ -23,3 +23,9 @@ func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_released("toggle_gui"):
         _hidden = !_hidden
         visible = !_hidden
+    if event.is_action_released("toggle_help"):
+        $Help.popup_centered()
+
+
+func _on_Quit_pressed() -> void:
+    get_tree().quit()

@@ -22,7 +22,6 @@ func _ready() -> void:
     boid_rect = Rect2(0, 0, screen_rect.size.x, screen_rect.size.y - 100) # don't include the bottom
     _accel_struct = AccelStruct.new(boid_rect, struct_scale)
     _accel_struct.debug = false
-    Music.play(Music.random_song(30))
 
 
 func set_count(value: int) -> void:

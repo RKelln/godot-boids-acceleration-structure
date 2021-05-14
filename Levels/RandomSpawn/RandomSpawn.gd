@@ -14,3 +14,16 @@ func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_released('toggle_paint'):
         $PaintTexture.visible = not $PaintTexture.visible
         $PaintViewportContainer.visible = not $PaintViewportContainer.visible
+    if event.is_action_released('toggle_music'):
+        if $MidiPlayer.playing:
+            $MidiPlayer.stop()
+            get_tree().call_group('boids', 'note_off')
+        else:
+            $MidiPlayer.play()
+    if event.is_action_released('pause'):
+        print("Pause", get_tree().paused)
+        get_tree().paused = not get_tree().paused
+
+
+func _on_MidiPlayer_midi_event(channel, event) -> void:
+    Music.midi_note(event)
