@@ -25,5 +25,5 @@ func _unhandled_input(event: InputEvent) -> void:
         get_tree().paused = not get_tree().paused
 
 
-func _on_MidiPlayer_midi_event(channel, event) -> void:
+func _on_MidiPlayer_midi_event(_channel, event) -> void:
     Music.midi_note(event)

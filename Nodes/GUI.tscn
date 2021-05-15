@@ -32,87 +32,87 @@ text = "FPS:"
 
 [node name="Cohesion" parent="HBoxContainer" instance=ExtResource( 1 )]
 margin_left = 64.0
-margin_right = 292.0
+margin_right = 266.0
 margin_bottom = 62.0
 rect_scale = Vector2( 1, 1 )
 initial_value = 10.0
 
 [node name="VBoxContainer" parent="HBoxContainer/Cohesion" index="0"]
-margin_right = 218.0
+margin_right = 192.0
 
 [node name="HBoxContainer" parent="HBoxContainer/Cohesion/VBoxContainer" index="0"]
-margin_right = 208.0
+margin_right = 182.0
 
 [node name="HSlider" parent="HBoxContainer/Cohesion/VBoxContainer/HBoxContainer" index="0"]
-margin_right = 130.0
+margin_right = 104.0
 
 [node name="SpinBox" parent="HBoxContainer/Cohesion/VBoxContainer/HBoxContainer" index="1"]
-margin_left = 134.0
-margin_right = 208.0
+margin_left = 108.0
+margin_right = 182.0
 
 [node name="Label" parent="HBoxContainer/Cohesion/VBoxContainer" index="1"]
-margin_left = 74.0
-margin_right = 133.0
+margin_left = 61.0
+margin_right = 120.0
 hint_tooltip = "Move towards local center of mass."
 text = "Cohesion"
 
 [node name="Alignment" parent="HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 296.0
-margin_right = 525.0
+margin_left = 270.0
+margin_right = 473.0
 margin_bottom = 62.0
 rect_scale = Vector2( 1, 1 )
 parameter = "alignment"
 initial_value = 10.0
 
 [node name="VBoxContainer" parent="HBoxContainer/Alignment" index="0"]
-margin_right = 219.0
+margin_right = 193.0
 
 [node name="HBoxContainer" parent="HBoxContainer/Alignment/VBoxContainer" index="0"]
-margin_right = 209.0
+margin_right = 183.0
 
 [node name="HSlider" parent="HBoxContainer/Alignment/VBoxContainer/HBoxContainer" index="0"]
-margin_right = 131.0
+margin_right = 105.0
 
 [node name="SpinBox" parent="HBoxContainer/Alignment/VBoxContainer/HBoxContainer" index="1"]
-margin_left = 135.0
-margin_right = 209.0
+margin_left = 109.0
+margin_right = 183.0
 
 [node name="Label" parent="HBoxContainer/Alignment/VBoxContainer" index="1"]
-margin_left = 71.0
-margin_right = 137.0
+margin_left = 58.0
+margin_right = 124.0
 hint_tooltip = "Move in the direction of local movement."
 text = "Alignment"
 
 [node name="Separation" parent="HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 529.0
-margin_right = 757.0
+margin_left = 477.0
+margin_right = 680.0
 margin_bottom = 62.0
 rect_scale = Vector2( 1, 1 )
 parameter = "separation"
 initial_value = 10.0
 
 [node name="VBoxContainer" parent="HBoxContainer/Separation" index="0"]
-margin_right = 218.0
+margin_right = 193.0
 
 [node name="HBoxContainer" parent="HBoxContainer/Separation/VBoxContainer" index="0"]
-margin_right = 208.0
+margin_right = 183.0
 
 [node name="HSlider" parent="HBoxContainer/Separation/VBoxContainer/HBoxContainer" index="0"]
-margin_right = 130.0
+margin_right = 105.0
 
 [node name="SpinBox" parent="HBoxContainer/Separation/VBoxContainer/HBoxContainer" index="1"]
-margin_left = 134.0
-margin_right = 208.0
+margin_left = 109.0
+margin_right = 183.0
 
 [node name="Label" parent="HBoxContainer/Separation/VBoxContainer" index="1"]
-margin_left = 70.0
-margin_right = 137.0
+margin_left = 58.0
+margin_right = 125.0
 hint_tooltip = "Avoid nearby boids."
 text = "Separation"
 
 [node name="Target" parent="HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 761.0
-margin_right = 990.0
+margin_left = 684.0
+margin_right = 886.0
 margin_bottom = 62.0
 rect_scale = Vector2( 1, 1 )
 parameter = "target_force"
@@ -120,27 +120,27 @@ initial_value = 10.0
 value_scalar = 0.1
 
 [node name="VBoxContainer" parent="HBoxContainer/Target" index="0"]
-margin_right = 219.0
+margin_right = 192.0
 
 [node name="HBoxContainer" parent="HBoxContainer/Target/VBoxContainer" index="0"]
-margin_right = 209.0
+margin_right = 182.0
 
 [node name="HSlider" parent="HBoxContainer/Target/VBoxContainer/HBoxContainer" index="0"]
-margin_right = 131.0
+margin_right = 104.0
 
 [node name="SpinBox" parent="HBoxContainer/Target/VBoxContainer/HBoxContainer" index="1"]
-margin_left = 135.0
-margin_right = 209.0
+margin_left = 108.0
+margin_right = 182.0
 
 [node name="Label" parent="HBoxContainer/Target/VBoxContainer" index="1"]
-margin_left = 64.0
-margin_right = 145.0
+margin_left = 50.0
+margin_right = 131.0
 hint_tooltip = "Strength of target following."
 text = "Target follow"
 
 [node name="SightRange" parent="HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 994.0
-margin_right = 1222.0
+margin_left = 890.0
+margin_right = 1093.0
 margin_bottom = 62.0
 rect_scale = Vector2( 1, 1 )
 parameter = "view_distance"
@@ -148,32 +148,32 @@ initial_value = 40.0
 value_scalar = 1.0
 
 [node name="VBoxContainer" parent="HBoxContainer/SightRange" index="0"]
-margin_right = 218.0
+margin_right = 193.0
 
 [node name="HBoxContainer" parent="HBoxContainer/SightRange/VBoxContainer" index="0"]
-margin_right = 208.0
+margin_right = 183.0
 
 [node name="HSlider" parent="HBoxContainer/SightRange/VBoxContainer/HBoxContainer" index="0"]
-margin_right = 130.0
+margin_right = 105.0
 min_value = 10.0
 max_value = 200.0
 value = 10.0
 
 [node name="SpinBox" parent="HBoxContainer/SightRange/VBoxContainer/HBoxContainer" index="1"]
-margin_left = 134.0
-margin_right = 208.0
+margin_left = 109.0
+margin_right = 183.0
 min_value = 10.0
 max_value = 200.0
 
 [node name="Label" parent="HBoxContainer/SightRange/VBoxContainer" index="1"]
-margin_left = 69.0
-margin_right = 139.0
+margin_left = 56.0
+margin_right = 126.0
 hint_tooltip = "Distance to boids considered local (in pixels)"
 text = "Sight range"
 
 [node name="AvoidRange" parent="HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 1226.0
-margin_right = 1455.0
+margin_left = 1097.0
+margin_right = 1300.0
 margin_bottom = 62.0
 rect_scale = Vector2( 1, 1 )
 parameter = "avoid_distance"
@@ -181,33 +181,33 @@ initial_value = 15.0
 value_scalar = 1.0
 
 [node name="VBoxContainer" parent="HBoxContainer/AvoidRange" index="0"]
-margin_right = 219.0
+margin_right = 193.0
 
 [node name="HBoxContainer" parent="HBoxContainer/AvoidRange/VBoxContainer" index="0"]
-margin_right = 209.0
+margin_right = 183.0
 
 [node name="HSlider" parent="HBoxContainer/AvoidRange/VBoxContainer/HBoxContainer" index="0"]
-margin_right = 131.0
+margin_right = 105.0
 min_value = 10.0
 max_value = 200.0
 value = 10.0
 
 [node name="SpinBox" parent="HBoxContainer/AvoidRange/VBoxContainer/HBoxContainer" index="1"]
-margin_left = 135.0
-margin_right = 209.0
+margin_left = 109.0
+margin_right = 183.0
 min_value = 10.0
 max_value = 200.0
 value = 10.0
 
 [node name="Label" parent="HBoxContainer/AvoidRange/VBoxContainer" index="1"]
-margin_left = 67.0
-margin_right = 142.0
+margin_left = 54.0
+margin_right = 129.0
 hint_tooltip = "Distance to start avoiding local boids"
 text = "Avoid range"
 
 [node name="Speed" parent="HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 1459.0
-margin_right = 1687.0
+margin_left = 1304.0
+margin_right = 1506.0
 margin_bottom = 62.0
 rect_scale = Vector2( 1, 1 )
 parameter = "speed"
@@ -215,34 +215,69 @@ initial_value = 250.0
 value_scalar = 1.0
 
 [node name="VBoxContainer" parent="HBoxContainer/Speed" index="0"]
-margin_right = 218.0
+margin_right = 192.0
 
 [node name="HBoxContainer" parent="HBoxContainer/Speed/VBoxContainer" index="0"]
-margin_right = 208.0
+margin_right = 182.0
 
 [node name="HSlider" parent="HBoxContainer/Speed/VBoxContainer/HBoxContainer" index="0"]
-margin_right = 130.0
+margin_right = 104.0
 min_value = 1.0
 max_value = 400.0
 step = 5.0
 value = 200.0
 
 [node name="SpinBox" parent="HBoxContainer/Speed/VBoxContainer/HBoxContainer" index="1"]
-margin_left = 134.0
-margin_right = 208.0
+margin_left = 108.0
+margin_right = 182.0
 min_value = 1.0
 max_value = 400.0
 step = 5.0
 value = 200.0
 
 [node name="Label" parent="HBoxContainer/Speed/VBoxContainer" index="1"]
-margin_left = 84.0
-margin_right = 123.0
+margin_left = 71.0
+margin_right = 110.0
 hint_tooltip = "Maxmium speed of boids (pixels / second)"
 text = "Speed"
 
+[node name="Scale" parent="HBoxContainer" instance=ExtResource( 1 )]
+margin_left = 1510.0
+margin_right = 1713.0
+margin_bottom = 62.0
+rect_scale = Vector2( 1, 1 )
+parameter = "base_scale"
+initial_value = 0.6
+value_scalar = 1.0
+
+[node name="VBoxContainer" parent="HBoxContainer/Scale" index="0"]
+margin_right = 193.0
+
+[node name="HBoxContainer" parent="HBoxContainer/Scale/VBoxContainer" index="0"]
+margin_right = 183.0
+
+[node name="HSlider" parent="HBoxContainer/Scale/VBoxContainer/HBoxContainer" index="0"]
+margin_right = 105.0
+min_value = 0.1
+max_value = 50.0
+step = 0.1
+
+[node name="SpinBox" parent="HBoxContainer/Scale/VBoxContainer/HBoxContainer" index="1"]
+margin_left = 109.0
+margin_right = 183.0
+min_value = 0.1
+max_value = 50.0
+step = 0.1
+value = 0.6
+
+[node name="Label" parent="HBoxContainer/Scale/VBoxContainer" index="1"]
+margin_left = 75.0
+margin_right = 108.0
+hint_tooltip = "Maxmium speed of boids (pixels / second)"
+text = "Scale"
+
 [node name="Count" parent="HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 1691.0
+margin_left = 1717.0
 margin_right = 1920.0
 margin_bottom = 62.0
 rect_scale = Vector2( 1, 1 )
@@ -252,33 +287,32 @@ initial_value = 250.0
 value_scalar = 1.0
 
 [node name="VBoxContainer" parent="HBoxContainer/Count" index="0"]
-margin_right = 219.0
+margin_right = 193.0
 
 [node name="HBoxContainer" parent="HBoxContainer/Count/VBoxContainer" index="0"]
-margin_right = 209.0
+margin_right = 183.0
 
 [node name="HSlider" parent="HBoxContainer/Count/VBoxContainer/HBoxContainer" index="0"]
-margin_right = 131.0
+margin_right = 105.0
 min_value = 1.0
 max_value = 2000.0
 step = 10.0
 value = 200.0
 
 [node name="SpinBox" parent="HBoxContainer/Count/VBoxContainer/HBoxContainer" index="1"]
-margin_left = 135.0
-margin_right = 209.0
+margin_left = 109.0
+margin_right = 183.0
 min_value = 1.0
 max_value = 2000.0
 step = 10.0
 value = 200.0
 
 [node name="Label" parent="HBoxContainer/Count/VBoxContainer" index="1"]
-margin_left = 86.0
-margin_right = 123.0
+margin_left = 73.0
+margin_right = 110.0
 text = "Count"
 
 [node name="Help" type="PopupDialog" parent="."]
-visible = true
 margin_right = 526.0
 margin_bottom = 709.0
 __meta__ = {
@@ -356,4 +390,5 @@ text = "Quit"
 [editable path="HBoxContainer/SightRange"]
 [editable path="HBoxContainer/AvoidRange"]
 [editable path="HBoxContainer/Speed"]
+[editable path="HBoxContainer/Scale"]
 [editable path="HBoxContainer/Count"]

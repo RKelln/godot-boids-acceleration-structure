@@ -20,6 +20,8 @@ func _on_value_changed(value: float) -> void:
 func _on_SpinBox_value_changed(value: float) -> void:
     _on_value_changed(value)
     $VBoxContainer/HBoxContainer/HSlider.value = value
+    # prevent further keyboard input from being placed inside spinbox
+    $VBoxContainer/HBoxContainer/HSlider.grab_focus()
 
 func _on_HSlider_value_changed(value: float) -> void:
     _on_value_changed(value)
@@ -27,3 +29,4 @@ func _on_HSlider_value_changed(value: float) -> void:
 
 func get_value() -> float:
     return _value
+

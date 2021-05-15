@@ -14,6 +14,8 @@ export(Vector2) var gravity := Vector2.ZERO
 
 onready var screen_size = get_viewport_rect().size
 
+var base_scale : Vector2  = Vector2.ONE # base scale of the boid, sets initial scale
+
 var _prev_point = null
 
 var target_vector: Vector2 = Vector2.INF
@@ -28,8 +30,6 @@ var _avoiding : int = 0
 var _targets : Array
 var _bounds_cells : int = 5
 var bounds_force := 1.0
-
-var paint_viewport : Viewport
 
 # optimizations:
 var MAX_PHYSICS_GROUPS := 4
@@ -47,6 +47,7 @@ func _ready():
     min_speed = max_speed / 10
     _physics_group = randi() % MAX_PHYSICS_GROUPS
     _active_physics_group = randi() % MAX_PHYSICS_GROUPS
+    scale = base_scale
     # randomize settings by variance
     if variance > 0:
         max_speed = max_speed * rand_range(1.0 - variance, 1.0 + variance)
@@ -269,6 +270,8 @@ func set_values(values : Dictionary) -> void:
         set_avoid_distance(values.avoid_distance)
     if values.has('speed'):
         set_speed(values.speed)
+    if values.has('scale'):
+        set_base_scale(values.scale)
     if values.has('target'):
         set_target_force(values.target)
     if values.has('target_force'):
@@ -296,6 +299,12 @@ func set_target_force(value: float) -> void:
 
 func set_speed(value: float) -> void:
     max_speed = _set_with_variance(value)
+
+func set_base_scale(value: float) -> void:
+    var s = _set_with_variance(value)
+    prints("boids set base scale", s)
+    base_scale = Vector2(s, s)
+    scale = base_scale
 
 func set_view_distance(value: float) -> void:
     view_distance = value

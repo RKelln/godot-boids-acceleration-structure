@@ -13,6 +13,7 @@ func get_current_values() -> Dictionary:
         'view' : $HBoxContainer/SightRange.get_value(),
         'avoid' : $HBoxContainer/AvoidRange.get_value(),
         'speed' :$HBoxContainer/Speed.get_value(),
+        'scale' :$HBoxContainer/Scale.get_value(),
         'count' : $HBoxContainer/Count.get_value()
     }
 
