@@ -1,5 +1,7 @@
 name: OSX_Release
 
+# Based on: https://github.com/robpc/maze-test-game/blob/osx-test/.github/workflows/release-macos.yml
+
 env:
   godot_version: 3.3
   filename: bird_brained
@@ -16,7 +18,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - preset: osx
+          - preset: osx # must match the name of the preset in export_presets.cfg
             runner: macos-latest
             export_file: bird-brained.zip
     runs-on: ${{ matrix.runner }}

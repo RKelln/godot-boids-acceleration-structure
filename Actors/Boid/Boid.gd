@@ -23,6 +23,7 @@ var _velocity: Vector2 setget velocity_set, velocity_get
 var momentum : float
 var min_speed : float
 var _acceleration := Vector2.ZERO
+var follow : bool = false # follow mouse location
 
 var _accel_struct : AccelStruct
 var _flock_size: int = 0
@@ -79,6 +80,12 @@ func _process(delta: float) -> void:
     bound_screen()
     if debug_cells:
         update()
+
+
+func _input(event: InputEvent) -> void:
+    if follow and event is InputEventMouseMotion:
+        set_target(event.position)
+
 
 func _physics_process(delta: float) -> void:
     var scaled_point = _accel_struct.scale_point(position)
@@ -252,8 +259,16 @@ func bound_screen():
 func velocity_set(velocity: Vector2):
     _velocity = velocity
 
+
 func velocity_get():
     return _velocity
+
+
+func toggle_follow():
+    follow = not follow
+    if not follow: # remove all targets when we stop following
+        _targets.clear()
+
 
 func set_values(values : Dictionary) -> void:
     if values.has('variance'):
@@ -302,7 +317,6 @@ func set_speed(value: float) -> void:
 
 func set_base_scale(value: float) -> void:
     var s = _set_with_variance(value)
-    prints("boids set base scale", s)
     base_scale = Vector2(s, s)
     scale = base_scale
 

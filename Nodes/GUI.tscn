@@ -223,7 +223,7 @@ margin_right = 182.0
 [node name="HSlider" parent="HBoxContainer/Speed/VBoxContainer/HBoxContainer" index="0"]
 margin_right = 104.0
 min_value = 1.0
-max_value = 400.0
+max_value = 1000.0
 step = 5.0
 value = 200.0
 
@@ -231,7 +231,7 @@ value = 200.0
 margin_left = 108.0
 margin_right = 182.0
 min_value = 1.0
-max_value = 400.0
+max_value = 1000.0
 step = 5.0
 value = 200.0
 
@@ -313,6 +313,7 @@ margin_right = 110.0
 text = "Count"
 
 [node name="Help" type="PopupDialog" parent="."]
+visible = true
 margin_right = 526.0
 margin_bottom = 709.0
 __meta__ = {
@@ -334,7 +335,7 @@ __meta__ = {
 margin_left = 50.0
 margin_top = 20.0
 margin_right = 476.0
-margin_bottom = 667.0
+margin_bottom = 693.0
 custom_constants/separation = 40
 
 [node name="Title" type="Label" parent="Help/MarginContainer/VBoxContainer"]
@@ -349,7 +350,7 @@ valign = 1
 [node name="Keys" type="RichTextLabel" parent="Help/MarginContainer/VBoxContainer"]
 margin_top = 89.0
 margin_right = 426.0
-margin_bottom = 557.0
+margin_bottom = 583.0
 size_flags_horizontal = 5
 custom_fonts/normal_font = ExtResource( 3 )
 text = "Esc: Display this help
@@ -358,6 +359,7 @@ Space: Pause
 Left click: place target flag, remove all other flags
 Right click: place another flag
 
+F: Toggle mouse follow
 G: Toggle GUI
 B: Toggle background
 M: Toggle midi/music 
@@ -373,9 +375,9 @@ fit_content_height = true
 
 [node name="Quit" type="Button" parent="Help/MarginContainer/VBoxContainer"]
 margin_left = 153.0
-margin_top = 597.0
+margin_top = 623.0
 margin_right = 273.0
-margin_bottom = 647.0
+margin_bottom = 673.0
 rect_min_size = Vector2( 120, 50 )
 size_flags_horizontal = 4
 custom_fonts/font = ExtResource( 3 )

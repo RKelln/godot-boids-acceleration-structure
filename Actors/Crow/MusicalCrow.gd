@@ -86,6 +86,5 @@ func set_values(values : Dictionary) -> void:
 
 func set_base_scale(value: float) -> void:
     .set_base_scale(value)
-    prints("set base scale", base_scale, target_scale, current_scale)
     target_scale = base_scale
     _max_scale = base_scale * note_scale_factor
