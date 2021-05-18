@@ -1,0 +1,61 @@
+name: OSX_Release
+
+env:
+  godot_version: 3.3
+  filename: bird_brained
+  version: 0.1
+
+on:
+  push:
+    branches:
+      - jackson
+
+jobs:
+  exports:
+    name: Export from Godot
+    strategy:
+      matrix:
+        include:
+          - preset: osx
+            runner: macos-latest
+            export_file: bird-brained.zip
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      - name: Set Env Vars
+        env:
+          FILENAME: ${{ env.filename }}
+          PRESET: ${{ matrix.preset }}
+          VERSION: ${{ env.version }}
+        run: |
+          # ^^ Orig ${GITHUB_REF/refs\/tags\/v/}
+          echo "version=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+          echo "package=${FILENAME}-v${VERSION}-${PRESET}.zip" >> $GITHUB_ENV
+      - name: Export osx
+        if: ${{ matrix.preset == 'osx' }}
+        env:
+          GODOT_VERSION: ${{ env.godot_version }}
+          PRESET: ${{ matrix.preset }}
+          BUILD_DIR: build
+          FILENAME: ${{ env.package }}
+        run: |
+          wget -q https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_osx.universal.zip
+          unzip Godot_v${GODOT_VERSION}-stable_osx.universal.zip
+
+          export XDG_DATA_HOME="$(pwd)/xdg_data_home"
+          export TEMPLATES_DIR="${XDG_DATA_HOME}/godot/templates/${GODOT_VERSION}.stable/"
+          mkdir -p ${TEMPLATES_DIR}
+          wget -q https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
+          unzip Godot_v${GODOT_VERSION}-stable_export_templates.tpz
+          mv templates/* ${TEMPLATES_DIR}
+
+          mkdir -p ${BUILD_DIR}
+          Godot.app/Contents/MacOS/Godot --export ${PRESET} ${BUILD_DIR}/${FILENAME}
+      - name: Upload package
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.package }}
+          path: build/${{ env.package }}
