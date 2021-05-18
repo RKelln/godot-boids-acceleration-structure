@@ -2,7 +2,7 @@
 
 ![Screenshot of godot boids](https://raw.githubusercontent.com/RKelln/godot-boids-acceleration-structure/jackson/godot_boids_screenshot.png)
 
-This work is based off Stephen Young's [[kyrick/godot-boids-acceleration-structure]](https://github.com/kyrick/godot-boids-acceleration-structure).
+This work is based off Stephen Young's [godot-boids-acceleration-structure](https://github.com/kyrick/godot-boids-acceleration-structure).
 
 
 Stephen implemented an 'acceleration structure' to optimize the nearest neighbour lookups. All boid locations are stored in a 2D which represents the space. The boids query the structure to get cells based on the facing of the boids. The boids then filter that list based on their view range. This way the boid isn't looping over the entire list of boids. It's only concerned with it's immediate surroundings. 
@@ -16,22 +16,23 @@ For more information on boids see [Craig Reynolds Boids](https://en.wikipedia.or
 
 Click F5 to run the default screen. Then click anywhere on the screen to issue a waypoint for the boids. The boids will continue to chase mouse clicks.
 
-Controls: 
-
-	`Esc`: Display help
-	`Space`: Pause
-
-	`G`: Toggle GUI
-	`B`: Toggle background
-	`M`: Toggle midi/music 
-	`P`: Toggle paint mode
-	`T`: Toggle trails
-	`A`: Zoom in
-	`Z`: Zoom out
-
-	`1`-`7`: 'Play' color notes
-
-	`D` : toggle debug info (red indicates speed, blue indicates emergency avoidance behaviour)
+## Controls: 
+---
+* `Esc`: Display help
+* `Space`: Pause
+---
+* `F`: Toggle boid mouse follow
+* `G`: Toggle GUI
+* `B`: Toggle background
+* `M`: Toggle midi/music 
+* `P`: Toggle paint mode
+* `T`: Toggle trails
+* `A`: Zoom in
+* `Z`: Zoom out
+---
+* `1`-`7`: 'Play' color notes
+---
+* `D` : toggle debug info (red indicates speed, blue indicates emergency avoidance behaviour)
 
 
 # Adjusting the simulation
@@ -45,6 +46,7 @@ The Crow scene script variables:
 * Sight distance - how far a boid will look ahead and to the side for cohesion, alignment, and separation
 * Avoid distance - the distance at which a boid will try to avoid another boid
 * Max Speed - the maximum speed of the boid
+* Scale - the size of the boid
 
 
 # Credits
@@ -52,3 +54,7 @@ The Crow scene script variables:
 This was forked from Stephen Young's [kyrick/godot-boids-acceleration-structure](https://github.com/kyrick/godot-boids-acceleration-structure), many thanks to them!
 
 This project uses the [FarmPuzzleAnimals](https://comigo.itch.io/farm-puzzle-animals) pack created by [CoMiGo](https://comigo.itch.io/).
+
+Github workflow from [robpc](https://github.com/robpc/maze-test-game/blob/osx-test/.github/workflows/release-macos.yml).
+
+[![OSX_Release](https://github.com/RKelln/godot-boids-acceleration-structure/actions/workflows/release-macos.yml/badge.svg?branch=jackson)](https://github.com/RKelln/godot-boids-acceleration-structure/actions/workflows/release-macos.yml)
