@@ -294,17 +294,13 @@ margin_right = 183.0
 
 [node name="HSlider" parent="HBoxContainer/Count/VBoxContainer/HBoxContainer" index="0"]
 margin_right = 105.0
-min_value = 1.0
 max_value = 2000.0
-step = 10.0
 value = 200.0
 
 [node name="SpinBox" parent="HBoxContainer/Count/VBoxContainer/HBoxContainer" index="1"]
 margin_left = 109.0
 margin_right = 183.0
-min_value = 1.0
 max_value = 2000.0
-step = 10.0
 value = 200.0
 
 [node name="Label" parent="HBoxContainer/Count/VBoxContainer" index="1"]
@@ -313,9 +309,9 @@ margin_right = 110.0
 text = "Count"
 
 [node name="Help" type="PopupDialog" parent="."]
-visible = true
 margin_right = 526.0
 margin_bottom = 709.0
+input_pass_on_modal_close_click = false
 __meta__ = {
 "_edit_use_anchors_": false
 }

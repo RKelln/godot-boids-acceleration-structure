@@ -42,7 +42,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NeutralBackground" type="ColorRect" parent="."]
+[node name="WhiteBackground" type="ColorRect" parent="."]
 margin_right = 1920.0
 margin_bottom = 1080.0
 __meta__ = {
@@ -201,10 +201,27 @@ __meta__ = {
 [node name="MidiPlayer" parent="." instance=ExtResource( 11 )]
 pause_mode = 1
 max_polyphony = 32
-file = "res://midi/Bird_Brained_2.mid"
+file = "res://midi/bird_brained_piano_midi.mid"
 volume_db = 0.0
 loop = true
+loop_start = 116.0
 soundfont = "res://midi/FluidR3_GS.sf2"
+bus = "Midi"
 
+[connection signal="add_boid" from="." to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_add_boid"]
+[connection signal="add_boid" from="." to="GUIView/GUI/HBoxContainer/Count" method="_on_add_boid"]
+[connection signal="remove_boid" from="." to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_remove_boid"]
+[connection signal="remove_boid" from="." to="GUIView/GUI/HBoxContainer/Count" method="_on_remove_boid"]
 [connection signal="gui_input" from="GUIView/FlagClicks" to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_FlagArea_gui_input"]
 [connection signal="midi_event" from="MidiPlayer" to="." method="_on_MidiPlayer_midi_event"]
+
+[editable path="GUIView/GUI"]
+[editable path="GUIView/GUI/HBoxContainer/Cohesion"]
+[editable path="GUIView/GUI/HBoxContainer/Alignment"]
+[editable path="GUIView/GUI/HBoxContainer/Separation"]
+[editable path="GUIView/GUI/HBoxContainer/Target"]
+[editable path="GUIView/GUI/HBoxContainer/SightRange"]
+[editable path="GUIView/GUI/HBoxContainer/AvoidRange"]
+[editable path="GUIView/GUI/HBoxContainer/Speed"]
+[editable path="GUIView/GUI/HBoxContainer/Scale"]
+[editable path="GUIView/GUI/HBoxContainer/Count"]

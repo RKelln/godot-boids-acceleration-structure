@@ -35,6 +35,11 @@ Click F5 to run the default screen. Then click anywhere on the screen to issue a
 * `D` : toggle debug info (red indicates speed, blue indicates emergency avoidance behaviour)
 
 
+# Running the OS X executable
+
+If you run the OS X executable your Mac will tell you that it won't start the app because it comes from an "unknown" developer. You can then allow the game via the security settings: Open the "System Preferences" then select "Security & Privacy" then click on "Open Anyway" for "Bird Brained". Then acknowledge the upcoming warning again via the click on "Open".
+
+
 # Adjusting the simulation
 
 You can control the parameters of the simulation during playback using the GUI at the bottom. You can set the initial values for these in the `GUI` scene, for each `SliderControl`.

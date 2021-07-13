@@ -93,7 +93,8 @@ func _physics_process(delta: float) -> void:
     _active_physics_group += 1
     if _active_physics_group >= MAX_PHYSICS_GROUPS:
         _active_physics_group = 0
-
+    if not visible:
+        return
     if _active_physics_group == _physics_group:
         var flock = _accel_struct.get_bodies(scaled_point, _velocity, view_distance, debug_cells)
         if debug_cells:
@@ -101,25 +102,35 @@ func _physics_process(delta: float) -> void:
 
         # targetting
         var target_direction := Vector2.ZERO
+        var target_scalar := 0.0
         if _targets.size() == 0 and momentum < min_speed:
             target_vector = choose_target()
-        if target_vector != Vector2.INF and global_position.distance_to(target_vector) < avoid_distance * 2:
+        var distance_to_target = global_position.distance_to(target_vector)
+        if target_vector != Vector2.INF and distance_to_target < avoid_distance * 2:
                 target_vector = choose_target()
         target_direction = global_position.direction_to(target_vector)
+        if target_vector != Vector2.INF:
+            target_scalar = 10.0 * distance_to_target / screen_size.x # NOTE if we chose a new target this will be wrong for an update
 
         # get cohesion, alignment, and separation vectors
         var vectors = get_flock_status(flock)
         _flock_size = vectors[3]
 
+        var separation_scalar := 1.0
+        var avoid_scalar := 1.0
+        if _avoiding > 0:
+            separation_scalar = 20.0
+            avoid_scalar = 0.2
+
         # steer towards vectors
         acceleration += 4 * (  # multiply by 2 because of group alternation
-            vectors[0] * cohesion_force
-            + vectors[1] * align_force
-            + vectors[2] * separation_force
-            + target_direction * target_force)
-        if _avoiding > 0:
-            # don't make big changes to acceleration
-            acceleration /= float(10 * _avoiding)
+            vectors[0] * cohesion_force * avoid_scalar
+            + vectors[1] * align_force * avoid_scalar
+            + vectors[2] * separation_force * separation_scalar
+            + target_direction * target_force * target_scalar)
+        #if _avoiding > 0:
+        #    # don't make big changes to acceleration
+        #    acceleration /= float(10 * _avoiding)
 
     # dart if too slow
     #if momentum < min_speed + variance:
@@ -269,6 +280,12 @@ func toggle_follow():
     if not follow: # remove all targets when we stop following
         _targets.clear()
 
+func avoid(amount : int = 0) -> void:
+    if amount <= 0:
+        amount = int(rand_range(1, 5))
+    _avoiding += amount
+    get_random_target()
+
 
 func set_values(values : Dictionary) -> void:
     if values.has('variance'):
@@ -287,8 +304,6 @@ func set_values(values : Dictionary) -> void:
         set_speed(values.speed)
     if values.has('scale'):
         set_base_scale(values.scale)
-    if values.has('target'):
-        set_target_force(values.target)
     if values.has('target_force'):
         set_target_force(values.target_force)
 

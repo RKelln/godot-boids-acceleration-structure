@@ -24,8 +24,11 @@ func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_released("toggle_gui"):
         _hidden = !_hidden
         visible = !_hidden
-    if event.is_action_released("toggle_help"):
-        $Help.popup_centered()
+    if event.is_action_pressed("toggle_help"):
+        # annoyingly the popup handles cancellingitself on pressed instead of released
+        # so we only have to trigger it, and it must be on pressed
+        if not $Help.visible:
+            $Help.popup_centered()
 
 
 func _on_Quit_pressed() -> void:
