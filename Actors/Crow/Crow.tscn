@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Actors/Crow/MusicalCrow.gd" type="Script" id=1]
-[ext_resource path="res://Actors/Crow/sprites/bird_flap_white.png" type="Texture" id=2]
+[ext_resource path="res://Actors/Crow/sprites/bird_flap_white_4.png" type="Texture" id=2]
 
 [sub_resource type="Curve" id=1]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.0988636 ), 0.0, 0.0, 0, 0 ]
@@ -32,9 +32,8 @@ __meta__ = {
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 1.61354, 2.23908e-13 )
 rotation = 1.5708
-scale = Vector2( 0.4, 0.4 )
 texture = ExtResource( 2 )
-hframes = 2
+hframes = 4
 
 [node name="Trail" type="Particles2D" parent="Sprite"]
 amount = 10

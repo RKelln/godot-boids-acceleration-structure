@@ -28,7 +28,7 @@ func _process(_delta: float) -> void:
     flap += momentum * r
     if flap > flap_threshold:
         if $Sprite.frame == 0:
-            $Sprite.frame = 1
+            $Sprite.frame = 1 + randi() % 3
         else:
             $Sprite.frame = 0
         flap = 0
