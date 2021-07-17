@@ -11,7 +11,7 @@ var _remove_boid_pressed := false
 var _next_boid := 0.0
 
 var _follow := false
-
+var _mouse_motion : Vector2
 
 func _process(delta: float) -> void:
     if _add_boid_pressed or _remove_boid_pressed:
@@ -19,10 +19,19 @@ func _process(delta: float) -> void:
         if _next_boid >= 1.0:
             _next_boid = 0.0
             if _add_boid_pressed:
-                emit_signal("add_boid", get_viewport().get_mouse_position())
+                _add_boid()
             elif _remove_boid_pressed:
                 emit_signal("remove_boid")
 
+func _add_boid():
+    # set target by mouse relative movement
+    print("relative", _mouse_motion)
+    var target = Vector2(get_viewport().get_mouse_position() + (3.0 * _mouse_motion))
+    emit_signal("add_boid", get_viewport().get_mouse_position(), _mouse_motion)
+
+func _input(event: InputEvent) -> void:
+    if event is InputEventMouseMotion:
+        _mouse_motion = event.relative
 
 func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_released('debug_boids'):
@@ -31,6 +40,10 @@ func _unhandled_input(event: InputEvent) -> void:
         get_tree().call_group('boids', 'set_debug', debug)
     elif event.is_action_released('background'):
         $Background.visible = not $Background.visible
+        if $Background.visible:
+            $GUIView/GUI.text_color(Color(1,1,1))
+        else:
+            $GUIView/GUI.text_color(Color(0,0,0))
     elif event.is_action_released('toggle_boid_trails'):
         get_tree().call_group('boids', 'toggle_trails')
     elif event.is_action_released('toggle_paint'):
@@ -42,6 +55,11 @@ func _unhandled_input(event: InputEvent) -> void:
             get_tree().call_group('boids', 'note_off')
         else:
             $MidiPlayer.play()
+    elif event.is_action_released('play_video'):
+        if $Background/VideoPlayer.is_playing():
+            $Background/VideoPlayer.stop()
+        else:
+            $Background/VideoPlayer.play()
     elif event.is_action_released('pause'):
         print("Pause", get_tree().paused)
         get_tree().paused = not get_tree().paused
@@ -55,14 +73,21 @@ func _unhandled_input(event: InputEvent) -> void:
             Input.set_default_cursor_shape(Input.CURSOR_ARROW)
     elif event.is_action('add_boid'):
         if event.is_action_pressed('add_boid'):
-            emit_signal("add_boid", get_viewport().get_mouse_position())
+            _add_boid()
         _add_boid_pressed = event.is_pressed()  # allow for echo
     elif event.is_action('remove_boid'):
         if event.is_action_pressed('remove_boid'):
             emit_signal("remove_boid")
         _remove_boid_pressed = event.is_pressed()  # allow for echo
     elif event.is_action_pressed('boid_explode'):
+        print("avoid")
         get_tree().call_group('boids', 'avoid')
+    elif event.is_action_released('boid_speed_increase'):
+        # HACK: FIXME: go through GUI
+        get_tree().call_group('boids', 'change_speed', 40 )
+    elif event.is_action_released('boid_speed_decrease'):
+        # HACK: FIXME: go through GUI
+        get_tree().call_group('boids', 'change_speed', -40 )
 
 func _on_MidiPlayer_midi_event(_channel, event) -> void:
     Music.midi_note(event)

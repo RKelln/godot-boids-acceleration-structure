@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Nodes/GUI.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Actors/Crow/Crow.tscn" type="PackedScene" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Levels/RandomSpawn/BlankTexture.gd" type="Script" id=9]
 [ext_resource path="res://Levels/RandomSpawn/RandomSpawn.gd" type="Script" id=10]
 [ext_resource path="res://addons/midi/MidiPlayer.tscn" type="PackedScene" id=11]
+[ext_resource path="res://video/piano_solo_1.ogv" type="VideoStream" id=12]
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("PaintViewportContainer/PaintBlur")
@@ -54,6 +55,21 @@ position = Vector2( 960, 540 )
 scale = Vector2( 1.39842, 1.39743 )
 texture = ExtResource( 5 )
 
+[node name="VideoPlayer" type="VideoPlayer" parent="Background"]
+pause_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -686.489
+margin_top = -386.424
+margin_right = -686.489
+margin_bottom = -386.424
+stream = ExtResource( 12 )
+autoplay = true
+buffering_msec = 1000
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="PaintTexture" type="TextureRect" parent="."]
 visible = false
 anchor_right = 1.0
@@ -83,6 +99,45 @@ anchor_top = 1.0
 margin_top = -60.0
 grow_vertical = 0
 rect_min_size = Vector2( 0, 60 )
+
+[node name="Label" parent="GUIView/GUI/HBoxContainer/Cohesion/VBoxContainer" index="1" groups=[
+"text",
+]]
+
+[node name="Label" parent="GUIView/GUI/HBoxContainer/Alignment/VBoxContainer" index="1" groups=[
+"text",
+]]
+
+[node name="Label" parent="GUIView/GUI/HBoxContainer/Separation/VBoxContainer" index="1" groups=[
+"text",
+]]
+
+[node name="Label" parent="GUIView/GUI/HBoxContainer/Target/VBoxContainer" index="1" groups=[
+"text",
+]]
+
+[node name="Label" parent="GUIView/GUI/HBoxContainer/SightRange/VBoxContainer" index="1" groups=[
+"text",
+]]
+
+[node name="Label" parent="GUIView/GUI/HBoxContainer/AvoidRange/VBoxContainer" index="1" groups=[
+"text",
+]]
+
+[node name="Label" parent="GUIView/GUI/HBoxContainer/Speed/VBoxContainer" index="1" groups=[
+"text",
+]]
+
+[node name="Scale" parent="GUIView/GUI/HBoxContainer" index="8"]
+initial_value = 0.8
+
+[node name="Label" parent="GUIView/GUI/HBoxContainer/Scale/VBoxContainer" index="1" groups=[
+"text",
+]]
+
+[node name="Label" parent="GUIView/GUI/HBoxContainer/Count/VBoxContainer" index="1" groups=[
+"text",
+]]
 
 [node name="FlagClicks" type="Container" parent="GUIView"]
 anchor_right = 1.0
@@ -162,7 +217,7 @@ script = ExtResource( 9 )
 material = SubResource( 3 )
 margin_right = 1920.0
 margin_bottom = 1080.0
-color = Color( 0, 0, 0, 0.0117647 )
+color = Color( 0, 0, 0, 0.0196078 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -193,7 +248,7 @@ script = ExtResource( 9 )
 material = SubResource( 3 )
 margin_right = 1920.0
 margin_bottom = 1080.0
-color = Color( 0, 0, 0, 0.0117647 )
+color = Color( 0, 0, 0, 0.0196078 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -208,10 +263,10 @@ loop_start = 116.0
 soundfont = "res://midi/FluidR3_GS.sf2"
 bus = "Midi"
 
-[connection signal="add_boid" from="." to="GUIView/GUI/HBoxContainer/Count" method="_on_add_boid"]
 [connection signal="add_boid" from="." to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_add_boid"]
-[connection signal="remove_boid" from="." to="GUIView/GUI/HBoxContainer/Count" method="_on_remove_boid"]
+[connection signal="add_boid" from="." to="GUIView/GUI/HBoxContainer/Count" method="_on_add_boid"]
 [connection signal="remove_boid" from="." to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_remove_boid"]
+[connection signal="remove_boid" from="." to="GUIView/GUI/HBoxContainer/Count" method="_on_remove_boid"]
 [connection signal="gui_input" from="GUIView/FlagClicks" to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_FlagArea_gui_input"]
 [connection signal="midi_event" from="MidiPlayer" to="." method="_on_MidiPlayer_midi_event"]
 

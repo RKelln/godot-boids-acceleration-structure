@@ -17,6 +17,9 @@ func get_current_values() -> Dictionary:
         'count' : $HBoxContainer/Count.get_value()
     }
 
+func text_color(c : Color) -> void:
+    get_tree().call_group("text", "set_modulate", c)
+
 func _process(_delta: float) -> void:
     fps.text = str("FPS:",(Engine.get_frames_per_second()))
 

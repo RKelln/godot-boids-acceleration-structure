@@ -2,7 +2,7 @@ extends "res://Actors/Crow/Crow.gd"
 
 var note : int = 0
 var note_color : Color
-var current_color : Color # alpha is unused, Crow.color is the acualt color
+var current_color : Color # alpha is unused, Crow.color is the actual color
 var target_color : Color  # alpha is unused
 var change_speed : float = 20.0
 var note_duration : float = 0.3 # seconds to change into note, double to change back
@@ -11,7 +11,7 @@ var is_note_on := false
 
 var current_scale : Vector2
 var target_scale : Vector2
-var note_scale_factor := 1.6
+var note_scale_factor := 1.8
 var _max_scale : Vector2
 
 var _last_note_played_at : int = 0
@@ -65,6 +65,20 @@ func play_note() -> void:
         trail.emitting = true
         trail.restart()
         trail.visible = true
+
+
+func play_alternate_note(c : Color) -> void:
+    if not is_note_on:
+        target_color = c
+        target_scale = base_scale * note_scale_factor
+        transition_speed = change_speed
+        _last_note_played_at = OS.get_ticks_msec()
+        # trails
+        if trail.emitting == false:
+            trail.emitting = true
+            trail.restart()
+            trail.visible = true
+
 
 func note_on() -> void:
     play_note()

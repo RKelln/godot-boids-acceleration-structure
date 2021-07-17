@@ -10,7 +10,7 @@ export var separation_force: = 0.05
 export(float) var view_distance: = 50.0
 export(float) var avoid_distance: = 20.0
 export(float) var variance: = 0.1
-export(Vector2) var gravity := Vector2.ZERO
+export(Vector2) var gravity := Vector2(0, 500)
 
 onready var screen_size = get_viewport_rect().size
 
@@ -27,10 +27,10 @@ var follow : bool = false # follow mouse location
 
 var _accel_struct : AccelStruct
 var _flock_size: int = 0
-var _avoiding : int = 0
+var _avoiding : float = 0  # in seconds, if positive then avoid
 var _targets : Array
-var _bounds_cells : int = 5
-var bounds_force := 1.0
+var _bounds_cells : int = 7
+var bounds_force := 10.0
 
 # optimizations:
 var MAX_PHYSICS_GROUPS := 4
@@ -43,19 +43,23 @@ var _debug_cells : Array
 
 func _ready():
     add_to_group("boids")
-    _velocity = Vector2(rand_range(-1, 1), rand_range(-1, 1)).normalized() * max_speed
+
     target_vector = get_random_target()
-    min_speed = max_speed / 10
     _physics_group = randi() % MAX_PHYSICS_GROUPS
     _active_physics_group = randi() % MAX_PHYSICS_GROUPS
     scale = base_scale
+
+    set_speed(max_speed)
+    _velocity = _random_direction() * max_speed * rand_range(0.4, 0.8)
+    momentum = _velocity.length()
+
     # randomize settings by variance
-    if variance > 0:
-        max_speed = max_speed * rand_range(1.0 - variance, 1.0 + variance)
-        target_force = target_force * rand_range(1.0 - variance, 1.0 + variance)
-        cohesion_force = cohesion_force * rand_range(1.0 - variance, 1.0 + variance)
-        align_force = align_force * rand_range(1.0 - variance, 1.0 + variance)
-        separation_force = separation_force * rand_range(1.0 - variance, 1.0 + variance)
+#    if variance > 0:
+#        max_speed = max_speed * rand_range(1.0 - variance, 1.0 + variance)
+#        target_force = target_force * rand_range(1.0 - variance, 1.0 + variance)
+#        cohesion_force = cohesion_force * rand_range(1.0 - variance, 1.0 + variance)
+#        align_force = align_force * rand_range(1.0 - variance, 1.0 + variance)
+#        separation_force = separation_force * rand_range(1.0 - variance, 1.0 + variance)
 
 
 func _draw() -> void:
@@ -73,7 +77,8 @@ func _draw() -> void:
 
 
 func _process(delta: float) -> void:
-    _velocity += gravity * delta # gravity
+    var verticality = abs(Vector2.UP.dot(_velocity.abs().normalized()))
+    _velocity += gravity * verticality * delta # gravity hack: mainly apply when vertical
 #    _velocity *= 1.0 - (2.0 * delta) # friction
     momentum = max(1.0, _velocity.length())
     translate(_velocity * delta)
@@ -93,8 +98,11 @@ func _physics_process(delta: float) -> void:
     _active_physics_group += 1
     if _active_physics_group >= MAX_PHYSICS_GROUPS:
         _active_physics_group = 0
+
     if not visible:
         return
+
+    # calculate flock influence if active
     if _active_physics_group == _physics_group:
         var flock = _accel_struct.get_bodies(scaled_point, _velocity, view_distance, debug_cells)
         if debug_cells:
@@ -121,47 +129,56 @@ func _physics_process(delta: float) -> void:
         if _avoiding > 0:
             separation_scalar = 20.0
             avoid_scalar = 0.2
+            _avoiding -= delta
+            if _avoiding < 0:
+                _avoiding = 0
 
         # steer towards vectors
-        acceleration += 4 * (  # multiply by 2 because of group alternation
+        acceleration += 4 * (  # multiply because of group alternation
             vectors[0] * cohesion_force * avoid_scalar
             + vectors[1] * align_force * avoid_scalar
             + vectors[2] * separation_force * separation_scalar
             + target_direction * target_force * target_scalar)
-        #if _avoiding > 0:
-        #    # don't make big changes to acceleration
-        #    acceleration /= float(10 * _avoiding)
-
-    # dart if too slow
-    #if momentum < min_speed + variance:
-    #    acceleration += global_position.direction_to(get_random_target())
 
     # avoid screen edges
     if scaled_point.x <= _accel_struct.x_min + _bounds_cells:
         acceleration += bounds_force * Vector2(momentum / (0.1 + global_position.distance_to(
-            Vector2(_accel_struct.global_bounds.position.x, position.y))), sign(_velocity.y))
+            Vector2(_accel_struct.global_bounds.position.x, position.y))), 2.0 * sign(_velocity.y))
     if scaled_point.y <= _accel_struct.y_min + _bounds_cells:
-        acceleration += bounds_force * Vector2(sign(_velocity.x), momentum / (0.1 + global_position.distance_to(
+        acceleration += bounds_force * Vector2(2.0 * sign(_velocity.x), momentum / (0.1 + global_position.distance_to(
             Vector2(position.x, _accel_struct.global_bounds.position.y))))
     if scaled_point.x >= _accel_struct.x_max - _bounds_cells:
         acceleration += bounds_force * Vector2(- momentum / (0.1 + global_position.distance_to(
-            Vector2(_accel_struct.global_bounds.end.x, position.y))), sign(_velocity.y))
+            Vector2(_accel_struct.global_bounds.end.x, position.y))), 2.0 * sign(_velocity.y))
     # strongly avoid ground
-    if scaled_point.y >= _accel_struct.y_max - (_bounds_cells + 6):
-        acceleration += bounds_force * Vector2(sign(_velocity.x), - momentum / (0.1 + global_position.distance_to(
+    if scaled_point.y >= _accel_struct.y_max - (_bounds_cells + 4):
+        acceleration += bounds_force * Vector2(2.0 * sign(_velocity.x), - momentum / (0.1 + global_position.distance_to(
             Vector2(position.x, _accel_struct.global_bounds.end.y))))
 
-    _acceleration = _acceleration.linear_interpolate(min(min_speed, momentum) * acceleration, 1.0 - delta).clamped(max_speed * delta + momentum)
+    _acceleration = lerp(_acceleration, acceleration, 10 * delta).clamped(4 * max_speed) # HACK
 
+    #var accel_scale = 2.0 + min_speed * delta # 1.0 # max(min_speed, momentum * 0.5)
+    var accel_scale = 1.0 + max(min_speed, momentum * 0.1) * delta # HACK: conservation of momentum
+
+    # avoid low speeds
+    if momentum < min_speed * 2.0:
+        accel_scale *= 2.0 - (momentum / (min_speed + 0.1))
+
+    # dart if stalling
     if momentum < min_speed:
         # fall and dart
-        _acceleration += Vector2(max_speed * rand_range(-0.5, 0.5), gravity.y)
-        _avoiding += 1
+        _acceleration += _random_direction() * rand_range(0.5, 0.8)
+        accel_scale *= 5.0
+        _avoiding += rand_range(0.1, 0.5)
 
     #_velocity = _velocity.linear_interpolate(_velocity + _acceleration, 1.0 - delta).clamped(max_speed)
-    _velocity = (_velocity + _acceleration).clamped(max_speed)
+    _velocity = (_velocity + _acceleration * accel_scale).clamped(max_speed)
 
     _prev_point = _accel_struct.update_body(self, scaled_point, _prev_point)
+
+
+func _random_direction() -> Vector2:
+    return Vector2(rand_range(-1, 1), rand_range(-1, 1)).normalized()
 
 
 func get_flock_status(flock: Array):
@@ -197,15 +214,13 @@ func get_flock_status(flock: Array):
 
     if flock_size:
         align_vector /= flock_size
-        align_vector += Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0)) * max_speed * variance # imperfect alignment
+        align_vector += Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0)) * momentum * variance # imperfect alignment
         flock_center /= flock_size
         center_vector = position.direction_to(flock_center) * position.distance_to(flock_center) / view_distance
 
     # if avoiding everything
     if flock_size > 5 and avoiding >= flock_size * 0.7:
-        _avoiding += 1
-    elif _avoiding > 0:
-        _avoiding -= 1
+        _avoiding += 0.3
 
     return [center_vector, align_vector, avoid_vector, flock_size]
 
@@ -280,9 +295,9 @@ func toggle_follow():
     if not follow: # remove all targets when we stop following
         _targets.clear()
 
-func avoid(amount : int = 0) -> void:
+func avoid(amount : float = 0) -> void:
     if amount <= 0:
-        amount = int(rand_range(1, 5))
+        amount = rand_range(0.1, 0.3)
     _avoiding += amount
     get_random_target()
 
@@ -329,6 +344,20 @@ func set_target_force(value: float) -> void:
 
 func set_speed(value: float) -> void:
     max_speed = _set_with_variance(value)
+    min_speed = max(10.0, max_speed / 5.0)
+
+# change the speed by amount
+func change_speed(amount: float) -> float:
+    if amount < 0 and -amount >= max_speed:
+        amount = -max_speed + 1
+    #var change := (max_speed + amount) / max_speed
+    prints(amount, max_speed)
+    max_speed = max(1.0, max_speed + amount)
+    min_speed = max(1.0, max_speed / 5.0)
+    # HACK: instantaneously change speed to better music dancing
+    _acceleration = _acceleration.normalized() * max_speed
+    _velocity = _velocity.clamped(max_speed)
+    return max_speed
 
 func set_base_scale(value: float) -> void:
     var s = _set_with_variance(value)
