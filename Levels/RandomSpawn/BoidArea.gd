@@ -66,7 +66,6 @@ func _on_FlagArea_gui_input(event: InputEvent) -> void:
                 t.visible = false
                 t.position = get_global_mouse_position()
                 $FlagArea.add_child(t)
-                prints("set target", t.position)
                 get_tree().call_group("boids", "set_target", t.position)
 
         elif event.get_button_index() == BUTTON_RIGHT and event.pressed == false:
@@ -74,7 +73,7 @@ func _on_FlagArea_gui_input(event: InputEvent) -> void:
             for flag in $FlagArea.get_children():
                 flag.visible = false
                 flag.queue_free()
-
+            get_tree().call_group("boids", "clear_targets")
 
 func _clamp_to_area(point : Vector2) -> Vector2:
     var v : Vector2
@@ -100,8 +99,11 @@ func add_boid(location : Vector2, values : Dictionary, target : Vector2 = Vector
     # set target
     if target != Vector2.INF:
         target = _clamp_to_area(target)
-        boid.set_target(target)
         boid.set_heading(target)
+        if $FlagArea.get_child_count() > 0:
+            # add all existing targets
+            for flag in $FlagArea.get_children():
+                boid.add_target(flag.position)
 
     add_child(boid)
 
@@ -114,7 +116,7 @@ func remove_boid(boid) -> void:
 func _on_add_boid(location : Vector2, target : Vector2 = Vector2.INF) -> void:
     var values = gui.get_current_values()
     # get first flag as target
-    if target == Vector2.INF and  $FlagArea.get_child_count() > 0:
+    if target == Vector2.INF and $FlagArea.get_child_count() > 0:
         target = $FlagArea.get_child(0).position
     add_boid(location, values, target)
 

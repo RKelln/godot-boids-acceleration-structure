@@ -29,8 +29,10 @@ var _accel_struct : AccelStruct
 var _flock_size: int = 0
 var _avoiding : float = 0  # in seconds, if positive then avoid
 var _targets : Array
-var _bounds_cells : int = 7
-var bounds_force := 10.0
+var _bounds_cells : int = 10
+var bounds_force := 7.0
+
+var flock : Array
 
 # optimizations:
 var MAX_PHYSICS_GROUPS := 4
@@ -104,7 +106,7 @@ func _physics_process(delta: float) -> void:
 
     # calculate flock influence if active
     if _active_physics_group == _physics_group:
-        var flock = _accel_struct.get_bodies(scaled_point, _velocity, view_distance, debug_cells)
+        flock = _accel_struct.get_bodies(scaled_point, _velocity, view_distance, debug_cells)
         if debug_cells:
             _debug_cells = _accel_struct._debug()
 
@@ -237,11 +239,16 @@ func set_target(target : Vector2):
 func add_target(target : Vector2):
     _targets.append(target)
     target_vector = choose_target(1.0 / _targets.size())
+    prints(target, _targets.size(), target_vector)
 
 func remove_target(target : Vector2):
     _targets.erase(target)
     if target == target_vector:
         target_vector = choose_target()
+
+func clear_targets() -> void:
+    _targets.clear()
+
 
 func choose_target(switch_percent : float = 1.0) -> Vector2:
     var s = _targets.size()

@@ -5,7 +5,7 @@ var debug : bool = false
 signal add_boid(location)
 signal remove_boid
 
-var _boid_rate = 20.0
+var _boid_rate = 30.0
 var _add_boid_pressed := false
 var _remove_boid_pressed := false
 var _next_boid := 0.0

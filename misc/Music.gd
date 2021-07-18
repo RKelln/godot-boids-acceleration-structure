@@ -73,7 +73,7 @@ func note(note_index : int, message : String) -> void:
         get_tree().call_group(n.group, message)
         n.on = true
         # send color to all boids
-        get_tree().call_group("boids", "play_alternate_note", notes[note_index].note_color)
+        #get_tree().call_group("boids", "play_alternate_note", notes[note_index].note_color)
 
 func midi_index_to_note_index(midi_index : int) -> int :
     return midi_index % 7

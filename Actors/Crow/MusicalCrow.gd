@@ -5,7 +5,7 @@ var note_color : Color
 var current_color : Color # alpha is unused, Crow.color is the actual color
 var target_color : Color  # alpha is unused
 var change_speed : float = 20.0
-var note_duration : float = 0.3 # seconds to change into note, double to change back
+var note_duration_ms : int = 200 # seconds to change into note, double to change back
 var transition_speed : float
 var is_note_on := false
 
@@ -35,7 +35,7 @@ func _process(delta: float) -> void:
         $Sprite.scale = current_scale
         $Sprite/Trail.scale = current_scale
 
-    if is_note_on == false and _last_note_played_at != 0 and OS.get_ticks_msec() > _last_note_played_at + (note_duration * 1000):
+    if is_note_on == false and _last_note_played_at != 0 and OS.get_ticks_msec() > _last_note_played_at + note_duration_ms:
         _last_note_played_at = 0
         target_color = base_color
         target_scale = base_scale

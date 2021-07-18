@@ -67,6 +67,7 @@ margin_bottom = -386.424
 stream = ExtResource( 12 )
 autoplay = true
 buffering_msec = 1000
+bus = "Video"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -101,36 +102,57 @@ margin_top = -60.0
 grow_vertical = 0
 rect_min_size = Vector2( 0, 60 )
 
+[node name="Cohesion" parent="GUIView/GUI/HBoxContainer" index="1"]
+initial_value = 20.0
+
 [node name="Label" parent="GUIView/GUI/HBoxContainer/Cohesion/VBoxContainer" index="1" groups=[
 "text",
 ]]
+
+[node name="Alignment" parent="GUIView/GUI/HBoxContainer" index="2"]
+initial_value = 30.0
 
 [node name="Label" parent="GUIView/GUI/HBoxContainer/Alignment/VBoxContainer" index="1" groups=[
 "text",
 ]]
 
+[node name="Separation" parent="GUIView/GUI/HBoxContainer" index="3"]
+initial_value = 20.0
+
 [node name="Label" parent="GUIView/GUI/HBoxContainer/Separation/VBoxContainer" index="1" groups=[
 "text",
 ]]
+
+[node name="Target" parent="GUIView/GUI/HBoxContainer" index="4"]
+initial_value = 60.0
 
 [node name="Label" parent="GUIView/GUI/HBoxContainer/Target/VBoxContainer" index="1" groups=[
 "text",
 ]]
 
+[node name="SightRange" parent="GUIView/GUI/HBoxContainer" index="5"]
+initial_value = 125.0
+
 [node name="Label" parent="GUIView/GUI/HBoxContainer/SightRange/VBoxContainer" index="1" groups=[
 "text",
 ]]
 
+[node name="AvoidRange" parent="GUIView/GUI/HBoxContainer" index="6"]
+initial_value = 25.0
+
 [node name="Label" parent="GUIView/GUI/HBoxContainer/AvoidRange/VBoxContainer" index="1" groups=[
 "text",
 ]]
+
+[node name="Speed" parent="GUIView/GUI/HBoxContainer" index="7"]
+initial_value = 300.0
 
 [node name="Label" parent="GUIView/GUI/HBoxContainer/Speed/VBoxContainer" index="1" groups=[
 "text",
 ]]
 
 [node name="Scale" parent="GUIView/GUI/HBoxContainer" index="8"]
-initial_value = 0.8
+initial_value = 0.9
 
 [node name="Label" parent="GUIView/GUI/HBoxContainer/Scale/VBoxContainer" index="1" groups=[
 "text",
