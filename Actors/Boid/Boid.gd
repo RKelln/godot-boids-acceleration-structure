@@ -372,3 +372,7 @@ func set_avoid_distance(value: float) -> void:
 
 func set_debug(b : bool) -> void:
     debug = b
+
+func set_heading(target : Vector2):
+    _velocity = Vector2.ZERO
+    _acceleration = position.direction_to(target) * max_speed

@@ -66,7 +66,7 @@ func _on_FlagArea_gui_input(event: InputEvent) -> void:
                 t.visible = false
                 t.position = get_global_mouse_position()
                 $FlagArea.add_child(t)
-                print("set target", t.position)
+                prints("set target", t.position)
                 get_tree().call_group("boids", "set_target", t.position)
 
         elif event.get_button_index() == BUTTON_RIGHT and event.pressed == false:
@@ -99,7 +99,9 @@ func add_boid(location : Vector2, values : Dictionary, target : Vector2 = Vector
 
     # set target
     if target != Vector2.INF:
-        boid.set_target(_clamp_to_area(target))
+        target = _clamp_to_area(target)
+        boid.set_target(target)
+        boid.set_heading(target)
 
     add_child(boid)
 
