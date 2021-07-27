@@ -14,7 +14,7 @@ For more information on boids see [Craig Reynolds Boids](https://en.wikipedia.or
 
 # Running the Demo
 
-Click F5 to run the default screen. Then click anywhere on the screen to issue a waypoint for the boids. The boids will continue to chase mouse clicks.
+Click F5 to run the default screen. Then click anywhere on the screen to issue a waypoint for the boids. The boids will continue to chase mouse clicks. Hold the left mouse button to have the continuualy follow the mouse (or press `F` to toggle mouse follow).
 
 ## Controls: 
 ---
@@ -24,11 +24,15 @@ Click F5 to run the default screen. Then click anywhere on the screen to issue a
 * `F`: Toggle boid mouse follow
 * `G`: Toggle GUI
 * `B`: Toggle background
-* `M`: Toggle midi/music 
 * `P`: Toggle paint mode
 * `T`: Toggle trails
 * `A`: Zoom in
 * `Z`: Zoom out
+* `<`: Remove boid
+* `>`: Add boid
+* `K`: Separate flock
+* `L`: Reduce boid speed
+* `;`: Increase boid speed
 ---
 * `1`-`7`: 'Play' color notes
 ---
