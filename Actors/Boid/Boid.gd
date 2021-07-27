@@ -65,17 +65,23 @@ func _ready():
 
 
 func _draw() -> void:
-	if debug_cells:
-		var s := _debug_cells.size()
-		if s > 0:
-			var each := 1.0 / s
-			for i in range(_debug_cells.size()):
-				var r : Rect2 = _debug_cells[i]
-				r.position = to_local(r.position)
-				draw_rect(r, Color(1.0, 0, 0, 1.0 - i * each))
-		var local_pos = to_local(global_position)
-		draw_circle(local_pos, view_distance, Color(0, 0, 1.0, 0.2))
-		draw_line(local_pos, to_local(target_vector), Color(0,0,0,target_force))
+    if debug_cells:
+        var s := _debug_cells.size()
+        if s > 0:
+            var each := 1.0 / s
+            for i in range(_debug_cells.size()):
+                var r : Rect2 = _debug_cells[i]
+                r.position = to_local(r.position)
+                draw_rect(r, Color(1.0, 0, 0, 1.0 - i * each))
+        var local_pos = to_local(global_position)
+        draw_circle(local_pos, view_distance, Color(0, 0, 1.0, 0.2))
+    if debug:
+        var local_pos = to_local(global_position)
+        for t in _targets:
+            if t != target_vector:
+                draw_line(local_pos, to_local(t), Color(0,0,0,0.2))
+            else:
+                draw_line(local_pos, to_local(target_vector), Color(0, 1, 0, min(target_force/5, 1)))
 
 
 func _process(delta: float) -> void:

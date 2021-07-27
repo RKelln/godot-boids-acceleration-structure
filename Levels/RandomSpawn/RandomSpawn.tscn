@@ -285,10 +285,10 @@ loop = true
 soundfont = "res://midi/SalC5Light2.sf2"
 bus = "Midi"
 
-[connection signal="add_boid" from="." to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_add_boid"]
 [connection signal="add_boid" from="." to="GUIView/GUI/HBoxContainer/Count" method="_on_add_boid"]
-[connection signal="remove_boid" from="." to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_remove_boid"]
+[connection signal="add_boid" from="." to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_add_boid"]
 [connection signal="remove_boid" from="." to="GUIView/GUI/HBoxContainer/Count" method="_on_remove_boid"]
+[connection signal="remove_boid" from="." to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_remove_boid"]
 [connection signal="gui_input" from="GUIView/FlagClicks" to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_FlagArea_gui_input"]
 [connection signal="midi_event" from="MidiPlayer" to="." method="_on_MidiPlayer_midi_event"]
 

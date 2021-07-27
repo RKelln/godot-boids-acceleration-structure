@@ -6,6 +6,7 @@ export(int) var boids = 20
 export(PackedScene) var Boid
 export(PackedScene) var Target
 export(int) var struct_scale = 10
+export(bool) var flags_visible = true
 
 var boid_rect: Rect2
 var boid_count : int = 0

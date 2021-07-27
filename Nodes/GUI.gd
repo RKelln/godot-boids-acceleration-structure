@@ -9,7 +9,7 @@ func get_current_values() -> Dictionary:
         'cohesion' : $HBoxContainer/Cohesion.get_value(),
         'alignment' : $HBoxContainer/Alignment.get_value(),
         'separation' : $HBoxContainer/Separation.get_value(),
-        'target' : $HBoxContainer/Target.get_value(),
+        'target_force' : $HBoxContainer/Target.get_value(),
         'view' : $HBoxContainer/SightRange.get_value(),
         'avoid' : $HBoxContainer/AvoidRange.get_value(),
         'speed' :$HBoxContainer/Speed.get_value(),
