@@ -13,6 +13,7 @@ var boid_count : int = 0
 
 var _accel_struct: AccelStruct
 
+onready var level := get_node("/root/RandomSpawn")
 onready var gui := get_node("/root/RandomSpawn/GUIView/GUI")
 onready var camera := get_node("/root/RandomSpawn/ZoomingCamera2D")
 
@@ -84,7 +85,7 @@ func _clamp_to_area(point : Vector2) -> Vector2:
     v.y = clamp(point.y, boid_rect.position.y, boid_rect.end.y)
     return v
 
-func add_boid(location : Vector2, values : Dictionary, target : Vector2 = Vector2.INF) -> void:
+func add_boid(location : Vector2, values : Dictionary, target : Vector2 = Vector2.INF, follow : bool = false) -> void:
     # HACK: cap to avoid flashing painting mode from too many messages
     if boid_count > 600:
         return
@@ -103,14 +104,20 @@ func add_boid(location : Vector2, values : Dictionary, target : Vector2 = Vector
     var note = Music.notes[Music.rand_note()]
     boid.set_values(note)
 
+    if follow: # overide target with current ouse position
+        target = get_global_mouse_position()
+
     # set target
+    if $FlagArea.get_child_count() > 0:
+        # add all existing targets
+        for flag in $FlagArea.get_children():
+            boid.add_target(flag.position)
+
     if target != Vector2.INF:
         target = _clamp_to_area(target)
         boid.set_heading(target)
-        if $FlagArea.get_child_count() > 0:
-            # add all existing targets
-            for flag in $FlagArea.get_children():
-                boid.add_target(flag.position)
+        if follow:
+            boid.set_target(target)
 
     add_child(boid)
     boid_count += 1
@@ -121,12 +128,15 @@ func remove_boid(boid) -> void:
     boid.queue_free()
     boid_count -= 1
 
-func _on_add_boid(location : Vector2, target : Vector2 = Vector2.INF) -> void:
+func _on_add_boid(location : Vector2, target : Vector2 = Vector2.INF, follow : bool = false) -> void:
     var values = gui.get_current_values()
+    # add additional values
+    values["debug"] = level.debug
+    values["follow"] = follow
     # get first flag as target
     if target == Vector2.INF and $FlagArea.get_child_count() > 0:
         target = $FlagArea.get_child(0).position
-    add_boid(location, values, target)
+    add_boid(location, values, target, follow)
 
 
 func _on_remove_boid() -> void:

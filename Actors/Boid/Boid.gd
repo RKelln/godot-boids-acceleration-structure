@@ -80,8 +80,8 @@ func _draw() -> void:
         for t in _targets:
             if t != target_vector:
                 draw_line(local_pos, to_local(t), Color(0,0,0,0.2))
-            else:
-                draw_line(local_pos, to_local(target_vector), Color(0, 1, 0, min(target_force/5, 1)))
+        # NOTE: target vector may not be in list of targets
+        draw_line(local_pos, to_local(target_vector), Color(0, 1, 0, min(target_force/5, 1)))
 
 
 func _process(delta: float) -> void:
@@ -95,9 +95,9 @@ func _process(delta: float) -> void:
         update()
 
 
-func _input(event: InputEvent) -> void:
-    if follow and event is InputEventMouseMotion:
-        set_target(event.position)
+#func _input(event: InputEvent) -> void:
+#    if follow and event is InputEventMouseMotion:
+#        set_target(event.position)
 
 
 func _physics_process(delta: float) -> void:
@@ -112,6 +112,10 @@ func _physics_process(delta: float) -> void:
 
     # calculate flock influence if active
     if _active_physics_group == _physics_group:
+        # follow behaviour
+        if follow :
+            set_target(get_global_mouse_position())
+
         flock = _accel_struct.get_bodies(scaled_point, _velocity, view_distance, debug_cells)
         if debug_cells:
             _debug_cells = _accel_struct._debug()
@@ -234,7 +238,8 @@ func get_flock_status(flock: Array):
 
 
 func get_random_target():
-    return Vector2(rand_range(0, screen_size.x), rand_range(0, screen_size.y))
+    return Vector2(rand_range(_accel_struct.global_bounds.position.x, _accel_struct.global_bounds.end.x),
+                   rand_range(_accel_struct.global_bounds.position.y, _accel_struct.global_bounds.end.y))
 
 
 func set_target(target : Vector2):
@@ -244,7 +249,7 @@ func set_target(target : Vector2):
 
 func add_target(target : Vector2):
     _targets.append(target)
-    target_vector = choose_target(1.0 / _targets.size())
+    target_vector = choose_target()
     #prints(target, _targets.size(), target_vector)
 
 func remove_target(target : Vector2):
@@ -256,14 +261,20 @@ func clear_targets() -> void:
     _targets.clear()
 
 
-func choose_target(switch_percent : float = 1.0) -> Vector2:
+func choose_target(switch_percent : float = INF) -> Vector2:
     var s = _targets.size()
     if s == 0:
         return get_random_target()
     if s == 1:
         return _targets[0]
 
-    if randf() > switch_percent:
+    if switch_percent == INF:
+        if s > 1:
+            switch_percent = 1.0 / float(s)
+        else:
+            s = 1.0
+
+    if randf() <= switch_percent and target_vector != Vector2.INF:
         # stay with current target
         return target_vector
 
@@ -334,6 +345,12 @@ func set_values(values : Dictionary) -> void:
         set_base_scale(values.scale)
     if values.has('target_force'):
         set_target_force(values.target_force)
+    if values.has('target'):
+        set_target(values.target)
+    if values.has("debug"):
+        set_debug(values.debug)
+    if values.has("follow"):
+        follow = values.follow
 
 func _set_with_variance(value: float) -> float:
     if variance > 0:

@@ -24,10 +24,12 @@ func _process(delta: float) -> void:
                 emit_signal("remove_boid")
 
 func _add_boid():
-    # set target by mouse relative movement
-    var target = get_viewport().get_mouse_position() + (5.0 * _mouse_motion)
+    var target := get_viewport().get_mouse_position()
+    if not _follow:
+        # set target by mouse relative movement
+        target = get_viewport().get_mouse_position() + (5.0 * _mouse_motion)
     #prints(_mouse_motion, 3.0 * _mouse_motion, get_viewport().get_mouse_position(), target)
-    emit_signal("add_boid", get_viewport().get_mouse_position(), target)
+    emit_signal("add_boid", get_viewport().get_mouse_position(), target, _follow)
 
 func _input(event: InputEvent) -> void:
     if event is InputEventMouseMotion:
@@ -79,7 +81,7 @@ func _unhandled_input(event: InputEvent) -> void:
         _follow = !_follow
         prints("Set follow:", _follow)
         get_tree().call_group('boids', 'toggle_follow')
-        if _follow: # TODO: FIXME:
+        if _follow: # TODO: FIXME: cursor isn't changing?
             Input.set_default_cursor_shape(Input.CURSOR_CROSS)
         else:
             Input.set_default_cursor_shape(Input.CURSOR_ARROW)
