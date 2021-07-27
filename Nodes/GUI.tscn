@@ -310,7 +310,6 @@ margin_right = 110.0
 text = "Count"
 
 [node name="Help" type="PopupDialog" parent="."]
-visible = true
 margin_right = 526.0
 margin_bottom = 709.0
 input_pass_on_modal_close_click = false
@@ -333,7 +332,7 @@ __meta__ = {
 margin_left = 50.0
 margin_top = 20.0
 margin_right = 476.0
-margin_bottom = 929.0
+margin_bottom = 669.0
 custom_constants/separation = 10
 
 [node name="Title" type="Label" parent="Help/MarginContainer/VBoxContainer"]

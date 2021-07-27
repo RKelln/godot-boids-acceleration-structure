@@ -1,5 +1,7 @@
 extends Control
 
+var recording_mode := false
+
 var debug : bool = false
 
 signal add_boid(location)
@@ -77,21 +79,23 @@ func _unhandled_input(event: InputEvent) -> void:
         else:
             $Background.modulate = Color(1,1,1,1)
     elif event.is_action_released('toggle_music'):
-        if $MidiPlayer.playing:
-            $MidiPlayer.stop()
-            get_tree().call_group('boids', 'note_off')
-        else:
-            var video_time = $Background/VideoPlayer.stream_position
-            var midi_time = (video_time + 217.833) * 1000
-            $MidiPlayer.set_tempo(192)
-            $MidiPlayer.play(midi_time)
+        if recording_mode:
+            if $MidiPlayer.playing:
+                $MidiPlayer.stop()
+                get_tree().call_group('boids', 'note_off')
+            else:
+                var video_time = $Background/VideoPlayer.stream_position
+                var midi_time = (video_time + 217.833) * 1000
+                $MidiPlayer.set_tempo(192)
+                $MidiPlayer.play(midi_time)
     elif event.is_action_released('play_video'):
-        print("play video")
-        if $Background/VideoPlayer.is_playing():
-            $Background/VideoPlayer.stop()
-        else:
-            $Background/VideoPlayer.visible = true
-            $Background/VideoPlayer.play()
+        if recording_mode:
+            print("play video")
+            if $Background/VideoPlayer.is_playing():
+                $Background/VideoPlayer.stop()
+            else:
+                $Background/VideoPlayer.visible = true
+                $Background/VideoPlayer.play()
     elif event.is_action_released('pause'):
         print("Pause", get_tree().paused)
         get_tree().paused = not get_tree().paused
@@ -116,15 +120,16 @@ func _unhandled_input(event: InputEvent) -> void:
         # HACK: FIXME: go through GUI
         get_tree().call_group('boids', 'change_speed', -40 )
     elif event.is_action_released('start_recording'):
-        print("start recording")
-        # start video and change the size to place it at the bottom
-        $Background/VideoPlayer.visible = true
-        $Background/VideoPlayer.play()
-        var scale = 0.3
-        $Background.scale = Vector2(scale, scale)
-        $Background.position.y = get_viewport().size.y - $Background.texture.get_height() * scale / 2 # position is from center and not scaled
-        #$MidiPlayer.set_tempo(192)
-        #$MidiPlayer.play(217000)
+        if recording_mode:
+            print("start recording")
+            # start video and change the size to place it at the bottom
+            $Background/VideoPlayer.visible = true
+            $Background/VideoPlayer.play()
+            var scale = 0.3
+            $Background.scale = Vector2(scale, scale)
+            $Background.position.y = get_viewport().size.y - $Background.texture.get_height() * scale / 2 # position is from center and not scaled
+            #$MidiPlayer.set_tempo(192)
+            #$MidiPlayer.play(217000)
 
 
 func _set_follow(value : bool):

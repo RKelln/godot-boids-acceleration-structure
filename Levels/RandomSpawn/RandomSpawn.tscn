@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Nodes/GUI.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Actors/Crow/Crow.tscn" type="PackedScene" id=2]
@@ -11,7 +11,6 @@
 [ext_resource path="res://Levels/RandomSpawn/BlankTexture.gd" type="Script" id=9]
 [ext_resource path="res://Levels/RandomSpawn/RandomSpawn.gd" type="Script" id=10]
 [ext_resource path="res://addons/midi/MidiPlayer.tscn" type="PackedScene" id=11]
-[ext_resource path="res://video/piano_solo_1.ogv" type="VideoStream" id=12]
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("PaintViewportContainer/PaintBlur")
@@ -64,7 +63,6 @@ margin_left = -686.489
 margin_top = -386.424
 margin_right = -686.489
 margin_bottom = -386.424
-stream = ExtResource( 12 )
 buffering_msec = 1000
 bus = "Video"
 __meta__ = {
@@ -278,10 +276,8 @@ __meta__ = {
 [node name="MidiPlayer" parent="." instance=ExtResource( 11 )]
 pause_mode = 1
 max_polyphony = 32
-file = "res://midi/bird_brained_piano_only.mid"
 volume_db = 0.0
 loop = true
-soundfont = "res://midi/SalC5Light2.sf2"
 bus = "Midi"
 
 [connection signal="add_boid" from="." to="GUIView/GUI/HBoxContainer/Count" method="_on_add_boid"]
