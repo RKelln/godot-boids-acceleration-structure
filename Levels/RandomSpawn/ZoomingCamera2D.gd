@@ -19,25 +19,25 @@ var _zoom_level := 1.0 setget _set_zoom_level
 onready var tween: Tween = $Tween
 
 func _set_zoom_level(value: float) -> void:
-    prints("zoom", value)
-    # We limit the value between `min_zoom` and `max_zoom`
-    _zoom_level = clamp(value, min_zoom, max_zoom)
-    # Then, we ask the tween node to animate the camera's `zoom` property from its current value
-    # to the target zoom level.
-    tween.interpolate_property(
-        self,
-        "zoom",
-        zoom,
-        Vector2(_zoom_level, _zoom_level),
-        zoom_duration,
-        tween.TRANS_SINE,
-        # Easing out means we start fast and slow down as we reach the target value.
-        tween.EASE_OUT
-    )
-    tween.start()
+	prints("zoom", value)
+	# We limit the value between `min_zoom` and `max_zoom`
+	_zoom_level = clamp(value, min_zoom, max_zoom)
+	# Then, we ask the tween node to animate the camera's `zoom` property from its current value
+	# to the target zoom level.
+	tween.interpolate_property(
+		self,
+		"zoom",
+		zoom,
+		Vector2(_zoom_level, _zoom_level),
+		zoom_duration,
+		tween.TRANS_SINE,
+		# Easing out means we start fast and slow down as we reach the target value.
+		tween.EASE_OUT
+	)
+	tween.start()
 
 func _unhandled_input(event: InputEvent) -> void:
-    if event.is_action_pressed("zoom_in", true):
-        _set_zoom_level(_zoom_level - zoom_factor)
-    if event.is_action_pressed("zoom_out", true):
-        _set_zoom_level(_zoom_level + zoom_factor)
+	if event.is_action_pressed("zoom_in", true):
+		_set_zoom_level(_zoom_level - zoom_factor)
+	if event.is_action_pressed("zoom_out", true):
+		_set_zoom_level(_zoom_level + zoom_factor)
