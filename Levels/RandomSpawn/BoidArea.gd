@@ -87,8 +87,8 @@ func _clamp_to_area(point : Vector2) -> Vector2:
 
 func add_boid(location : Vector2, values : Dictionary, target : Vector2 = Vector2.INF, follow : bool = false) -> void:
     # HACK: cap to avoid flashing painting mode from too many messages
-    if boid_count > 600:
-        return
+#    if boid_count > 600:
+#        return
 
     var boid = Boid.instance()
 
