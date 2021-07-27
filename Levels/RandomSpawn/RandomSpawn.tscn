@@ -240,7 +240,7 @@ script = ExtResource( 9 )
 material = SubResource( 3 )
 margin_right = 1920.0
 margin_bottom = 1080.0
-color = Color( 0, 0, 0, 0.0196078 )
+color = Color( 0, 0, 0, 0.0392157 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -271,7 +271,7 @@ script = ExtResource( 9 )
 material = SubResource( 3 )
 margin_right = 1920.0
 margin_bottom = 1080.0
-color = Color( 0, 0, 0, 0.0196078 )
+color = Color( 0, 0, 0, 0.0392157 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -279,11 +279,10 @@ __meta__ = {
 [node name="MidiPlayer" parent="." instance=ExtResource( 11 )]
 pause_mode = 1
 max_polyphony = 32
-file = "res://midi/bird_brained_piano_midi.mid"
+file = "res://midi/bird_brained_piano_only.mid"
 volume_db = 0.0
 loop = true
-loop_start = 116.0
-soundfont = "res://midi/FluidR3_GS.sf2"
+soundfont = "res://midi/SalC5Light2.sf2"
 bus = "Midi"
 
 [connection signal="add_boid" from="." to="BoidsViewPointContainer/BoidsViewPort/BoidArea" method="_on_add_boid"]
