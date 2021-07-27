@@ -60,7 +60,7 @@ default_bus_layout="res://misc/default_bus_layout.tres"
 
 [autoload]
 
-Music="*res://misc/Music.gd"
+Music="*res://Nodes/Music.gd"
 
 [display]
 
