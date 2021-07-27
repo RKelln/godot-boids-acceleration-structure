@@ -19,6 +19,7 @@ var base_scale : Vector2  = Vector2.ONE # base scale of the boid, sets initial s
 var _prev_point = null
 
 var target_vector: Vector2 = Vector2.INF
+var target_scalar : float  # modifies strength of target follow (based on distance)
 var _velocity: Vector2 setget velocity_set, velocity_get
 var momentum : float
 var min_speed : float
@@ -78,10 +79,9 @@ func _draw() -> void:
     if debug:
         var local_pos = to_local(global_position)
         for t in _targets:
-            if t != target_vector:
-                draw_line(local_pos, to_local(t), Color(0,0,0,0.2))
-        # NOTE: target vector may not be in list of targets
-        draw_line(local_pos, to_local(target_vector), Color(0, 1, 0, min(target_force/5, 1)))
+            draw_line(local_pos, to_local(t), Color(0,0,0,0.2))
+        # NOTE: target vector may not be in list of targets (if in follow mode, etc)
+        draw_line(local_pos, to_local(target_vector), Color(0, 1, 0, min(target_scalar / 10, 1)))
 
 
 func _process(delta: float) -> void:
@@ -114,7 +114,7 @@ func _physics_process(delta: float) -> void:
     if _active_physics_group == _physics_group:
         # follow behaviour
         if follow :
-            set_target(get_global_mouse_position())
+            target_vector = get_global_mouse_position()
 
         flock = _accel_struct.get_bodies(scaled_point, _velocity, view_distance, debug_cells)
         if debug_cells:
@@ -122,15 +122,18 @@ func _physics_process(delta: float) -> void:
 
         # targetting
         var target_direction := Vector2.ZERO
-        var target_scalar := 0.0
         if _targets.size() == 0 and momentum < min_speed:
             target_vector = choose_target()
-        var distance_to_target = global_position.distance_to(target_vector)
-        if target_vector != Vector2.INF and distance_to_target < avoid_distance * 2:
-                target_vector = choose_target()
-        target_direction = global_position.direction_to(target_vector)
-        if target_vector != Vector2.INF:
-            target_scalar = 10.0 * distance_to_target / screen_size.x # NOTE if we chose a new target this will be wrong for an update
+        if target_vector == Vector2.INF:
+            target_vector = choose_target()
+        if target_vector == Vector2.INF:
+            target_scalar = 0
+        else:
+            var distance_to_target = global_position.distance_to(target_vector)
+            if distance_to_target < avoid_distance * 3:
+                    target_vector = choose_target()
+            target_direction = global_position.direction_to(target_vector)
+            target_scalar = 10.0 * distance_to_target / _accel_struct.global_bounds.end.x # NOTE if we chose a new target this will be wrong for an update
 
         # get cohesion, alignment, and separation vectors
         var vectors = get_flock_status(flock)
@@ -259,7 +262,7 @@ func remove_target(target : Vector2):
 
 func clear_targets() -> void:
     _targets.clear()
-
+    target_vector = Vector2.INF
 
 func choose_target(switch_percent : float = INF) -> Vector2:
     var s = _targets.size()
@@ -316,8 +319,16 @@ func velocity_get():
 
 func toggle_follow():
     follow = not follow
-    if not follow: # remove all targets when we stop following
-        _targets.clear()
+    if not follow:
+        # remove all targets when we stop following
+        #    _targets.clear()
+        target_vector = Vector2.INF
+
+func set_follow(f : bool):
+    follow = f
+    if not follow:
+        target_vector = Vector2.INF
+
 
 func avoid(amount : float = 0) -> void:
     if amount <= 0:

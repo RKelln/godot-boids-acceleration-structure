@@ -8,6 +8,7 @@ signal remove_boid
 var _boid_rate = 30.0
 var _add_boid_pressed := false
 var _remove_boid_pressed := false
+var _mouse_left_down_at := 0
 var _next_boid := 0.0
 
 var _follow := false
@@ -22,6 +23,11 @@ func _process(delta: float) -> void:
                 _add_boid()
             elif _remove_boid_pressed:
                 emit_signal("remove_boid")
+    # turn on follow if mouse button held
+    if not _follow and _mouse_left_down_at > 0:
+        if OS.get_ticks_msec() - _mouse_left_down_at > 400: # msec
+            _set_follow(true)
+
 
 func _add_boid():
     var target := get_viewport().get_mouse_position()
@@ -31,9 +37,20 @@ func _add_boid():
     #prints(_mouse_motion, 3.0 * _mouse_motion, get_viewport().get_mouse_position(), target)
     emit_signal("add_boid", get_viewport().get_mouse_position(), target, _follow)
 
+
 func _input(event: InputEvent) -> void:
     if event is InputEventMouseMotion:
         _mouse_motion = event.relative
+    if event is InputEventMouseButton:
+        # NOTE: pressed == false == mouse up
+        if event.get_button_index() == BUTTON_LEFT:
+            if event.pressed:
+                _mouse_left_down_at = OS.get_ticks_msec()
+            else:
+                _mouse_left_down_at = 0
+                if _follow:
+                    _set_follow(false)
+
 
 func set_background(visible : bool) -> void:
     $Background.visible = visible
@@ -41,6 +58,7 @@ func set_background(visible : bool) -> void:
         $GUIView/GUI.text_color(Color(1,1,1))
     else:
         $GUIView/GUI.text_color(Color(0,0,0))
+
 
 func _unhandled_input(event: InputEvent) -> void:
     if event.is_action_released('debug_boids'):
@@ -79,12 +97,7 @@ func _unhandled_input(event: InputEvent) -> void:
         get_tree().paused = not get_tree().paused
     elif event.is_action_released('toggle_follow'):
         _follow = !_follow
-        prints("Set follow:", _follow)
-        get_tree().call_group('boids', 'toggle_follow')
-        if _follow: # TODO: FIXME: cursor isn't changing?
-            Input.set_default_cursor_shape(Input.CURSOR_CROSS)
-        else:
-            Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+        _set_follow(_follow)
     elif event.is_action('add_boid'):
         if event.is_action_pressed('add_boid'):
             _add_boid()
@@ -112,6 +125,17 @@ func _unhandled_input(event: InputEvent) -> void:
         $Background.position.y = get_viewport().size.y - $Background.texture.get_height() * scale / 2 # position is from center and not scaled
         #$MidiPlayer.set_tempo(192)
         #$MidiPlayer.play(217000)
+
+
+func _set_follow(value : bool):
+    _follow = value
+    prints("Set follow:", _follow)
+    get_tree().call_group('boids', 'set_follow', _follow)
+    if _follow: # TODO: FIXME: cursor isn't changing?
+        Input.set_default_cursor_shape(Input.CURSOR_CROSS)
+    else:
+        Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+
 
 func _on_MidiPlayer_midi_event(_channel, event) -> void:
     Music.midi_note(event)

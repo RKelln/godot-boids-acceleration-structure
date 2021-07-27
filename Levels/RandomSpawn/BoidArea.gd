@@ -53,19 +53,19 @@ func get_random_target():
 
 
 func _on_FlagArea_gui_input(event: InputEvent) -> void:
-    #return
     if event is InputEventMouseButton:
         # NOTE: pressed == false == mouse up
         if event.get_button_index() == BUTTON_LEFT and event.pressed == false:
-                # hold shift to add more than one
-                if not Input.is_key_pressed(KEY_SHIFT):
-                    _remove_all_flags()
+            # mouse button released, add a flag
+            # hold shift to add more than one
+            if not Input.is_key_pressed(KEY_SHIFT):
+                _remove_all_flags()
 
-                var t = Target.instance()
-                t.visible = flags_visible
-                t.position = get_global_mouse_position()
-                $FlagArea.add_child(t)
-                get_tree().call_group("boids", "add_target", t.position)
+            var t = Target.instance()
+            t.visible = flags_visible
+            t.position = get_global_mouse_position()
+            $FlagArea.add_child(t)
+            get_tree().call_group("boids", "add_target", t.position)
 
         elif event.get_button_index() == BUTTON_RIGHT and event.pressed == false:
             _remove_all_flags()
